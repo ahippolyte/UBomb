@@ -148,3 +148,5 @@ gradle-app.setting
 
 # End of https://www.toptal.com/developers/gitignore/api/gradle
 play.bat
+.project
+.settings/org.eclipse.buildship.core.prefs
