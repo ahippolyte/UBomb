@@ -11,11 +11,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.model.go.character.Player;
 
 public class Game {
 
-    private final World world;
+    private final World world; //Pour plusieurs mondes, implémenter un tableau de World
     private final Player player;
     private final String worldPath;
     public int initPlayerLives;
@@ -56,6 +57,5 @@ public class Game {
     public Player getPlayer() {
         return this.player;
     }
-
 
 }

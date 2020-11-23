@@ -15,7 +15,6 @@ public abstract class GameObject extends Entity {
     protected final Game game;
     private Position position;
 
-
     public Position getPosition() {
         return position;
     }

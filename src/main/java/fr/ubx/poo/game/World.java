@@ -5,7 +5,8 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
-
+import fr.ubx.poo.model.decor.Box;
+import fr.ubx.poo.model.decor.Stone;
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -53,7 +54,12 @@ public class World {
     }
 
     public boolean isInside(Position position) {
-        return true; // to update
+        if(position.x >=0 && position.x < dimension.width){
+            if(position.y >=0 && position.y < dimension.height){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isEmpty(Position position) {
