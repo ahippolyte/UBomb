@@ -25,6 +25,11 @@ public enum ImageResource {
     TREE("tree.png"),
     BOX("box.png"),
     PRINCESS("bomberwoman.png"),
+    Heart("heart.png"),
+    BombNumberInc("bonus_bomb_nb_inc.png"),
+    BombNumberDec("bonus_bomb_nb_dec.png"),
+    BombRangeInc("bonus_bomb_range_inc.png"),
+    BombRangeDec("bonus_bomb_range_dec.png"),
     ;
 
     private final String FileName;

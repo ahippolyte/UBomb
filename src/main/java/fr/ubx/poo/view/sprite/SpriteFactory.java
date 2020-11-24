@@ -4,6 +4,7 @@
 
 package fr.ubx.poo.view.sprite;
 
+//import static fr.ubx.poo.game.WorldEntity.BombNumberInc;
 import static fr.ubx.poo.view.image.ImageResource.*;
 
 import fr.ubx.poo.game.Position;
@@ -26,6 +27,16 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(BOX), position);
         if (decor instanceof Princess)
             return new SpriteDecor(layer, factory.get(PRINCESS), position);
+        if (decor instanceof Heart)
+            return new SpriteDecor(layer, factory.get(Heart), position);
+        if (decor instanceof BombNumberDec)
+            return new SpriteDecor(layer, factory.get(BombNumberDec), position);
+        if (decor instanceof BombNumberInc)
+            return new SpriteDecor(layer, factory.get(BombNumberInc), position);
+        if (decor instanceof BombRangeInc)
+            return new SpriteDecor(layer, factory.get(BombRangeInc), position);
+        if (decor instanceof BombRangeDec)
+            return new SpriteDecor(layer, factory.get(BombRangeDec), position);
         throw new RuntimeException("Unsupported sprite for decor " + decor);
     }
 
