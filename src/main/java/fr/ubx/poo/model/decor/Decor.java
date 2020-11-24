@@ -10,5 +10,7 @@ import fr.ubx.poo.model.Entity;
  * A decor is an element that does not know its own position in the grid.
  */
 public class Decor extends Entity {
-
+    public String toString(){
+        return "Décor";
+    }
 }

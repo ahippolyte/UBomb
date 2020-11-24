@@ -24,6 +24,7 @@ public enum ImageResource {
     STONE("stone.png"),
     TREE("tree.png"),
     BOX("box.png"),
+    PRINCESS("bomberwoman.png"),
     ;
 
     private final String FileName;

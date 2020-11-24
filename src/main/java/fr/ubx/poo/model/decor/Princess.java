@@ -1,10 +1,10 @@
 package fr.ubx.poo.model.decor;
 
 
-public class Box extends Decor {
+public class Princess extends Decor {
 
     public String toString(){
-        return "Box";
+        return "Princess";
     }
 
 }

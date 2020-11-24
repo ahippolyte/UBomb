@@ -62,10 +62,11 @@ public class Player extends GameObject implements Movable {
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         Decor nextDecor = game.getWorld().get(nextPos);
+        Position nexNextPos = direction.nextPosition(nextPos);
 
         if(nextDecor instanceof Box){
             game.getWorld().clear(nextPos);
-            game.getWorld().set(direction.nextPosition(nextPos), nextDecor);
+            game.getWorld().set(nexNextPos, nextDecor);
             game.getWorld().setChange(true);
         }
 
