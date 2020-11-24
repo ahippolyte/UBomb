@@ -4,7 +4,7 @@
 
 package fr.ubx.poo.view.sprite;
 
-import fr.ubx.poo.model.go.character.Player;
+import fr.ubx.poo.model.go.character.*;
 import fr.ubx.poo.view.image.ImageFactory;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.layout.Pane;
@@ -16,6 +16,7 @@ public class SpritePlayer extends SpriteGameObject {
         super(layer, null, player);
         updateImage();
     }
+
 
     @Override
     public void updateImage() {

@@ -44,7 +44,8 @@ public class WorldBuilder {
                 return new BombRangeInc();
             case BombRangeDec:
                 return new BombRangeDec();
-
+            case Key:
+                return new Key();
             default:
                 return null;
         }

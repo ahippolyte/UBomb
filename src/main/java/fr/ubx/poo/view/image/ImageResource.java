@@ -30,6 +30,11 @@ public enum ImageResource {
     BombNumberDec("bonus_bomb_nb_dec.png"),
     BombRangeInc("bonus_bomb_range_inc.png"),
     BombRangeDec("bonus_bomb_range_dec.png"),
+    Key("key.png"),
+    Monster_down("monster_down.png"),
+    Monster_left("monster_left.png"),
+    Monster_up("monster_up.png"),
+    Monster_right("monster_right.png"),
     ;
 
     private final String FileName;

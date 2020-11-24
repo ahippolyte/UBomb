@@ -66,6 +66,10 @@ public class Player extends GameObject implements Movable {
             if(nextDecor instanceof BombRangeDec){
                 return true;
             }
+            if(nextDecor instanceof Key){
+                return true;
+            }
+
 
             if(nextDecor instanceof Box){
                 if(game.getWorld().isEmpty(nextNextPos) & nextNextPos.inside(game.getWorld().dimension)){
@@ -113,6 +117,12 @@ public class Player extends GameObject implements Movable {
             game.getWorld().clear(nextPos);
             game.getWorld().setChange(true);
         }
+        if(nextDecor instanceof Key){
+            game.getWorld().clear(nextPos);
+            game.getWorld().setChange(true);
+        }
+
+
 
 
 
