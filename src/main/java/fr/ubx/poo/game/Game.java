@@ -26,6 +26,7 @@ public class Game {
         this.worldPath = worldPath;
         loadConfig(worldPath);
         Position positionPlayer = null;
+        initPlayerLives = 3;
         try {
             positionPlayer = world.findPlayer();
             player = new Player(this, positionPlayer);

@@ -91,7 +91,6 @@ public class Player extends GameObject implements Movable {
 
         if(nextDecor instanceof Princess){
             winner=true;
-            isWinner();
         }
         if(nextDecor instanceof Heart){
             game.getWorld().clear(nextPos);

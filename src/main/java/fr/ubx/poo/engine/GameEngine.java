@@ -147,7 +147,7 @@ public final class GameEngine {
         }
         if (player.isWinner()) {
             gameLoop.stop();
-            showMessage("Gagné", Color.BLUE);
+            showMessage("Gagné!", Color.BLUE);
         }
 
         game.getWorld().setChange(false);
