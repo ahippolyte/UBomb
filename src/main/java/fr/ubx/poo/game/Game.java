@@ -20,6 +20,9 @@ public class Game {
     private final Player player;
     private final String worldPath;
     public int initPlayerLives;
+    public int initPlayerKey;
+    public int initPlayerBomb;
+    public int initPlayerRange;
 
     public Game(String worldPath) {
         world = new WorldStatic();
@@ -27,6 +30,9 @@ public class Game {
         loadConfig(worldPath);
         Position positionPlayer = null;
         initPlayerLives = 3;
+        initPlayerKey = 0;
+        initPlayerBomb = 1;
+        initPlayerRange = 1;
         try {
             positionPlayer = world.findPlayer();
             player = new Player(this, positionPlayer);
@@ -36,27 +42,38 @@ public class Game {
         }
     }
 
+    //getters:
     public int getInitPlayerLives() {
         return initPlayerLives;
     }
+    public int getInitPlayerKey() {
+        return initPlayerKey;
+    }
+    public int getInitPlayerBomb() { return initPlayerBomb; }
+    public int getInitPlayerRange() { return initPlayerRange; }
 
+    public World getWorld() {
+        return world;
+    }
+    public Player getPlayer() {
+        return this.player;
+    }
+
+
+    //methods:
     private void loadConfig(String path) {
         try (InputStream input = new FileInputStream(new File(path, "config.properties"))) {
             Properties prop = new Properties();
             // load the configuration file
             prop.load(input);
             initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
+            initPlayerKey = Integer.parseInt(prop.getProperty("key", "0"));
+            initPlayerBomb = Integer.parseInt(prop.getProperty("bomb", "1"));
+            initPlayerRange = Integer.parseInt(prop.getProperty("range", "1"));
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
         }
     }
 
-    public World getWorld() {
-        return world;
-    }
-
-    public Player getPlayer() {
-        return this.player;
-    }
 
 }

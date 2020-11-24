@@ -11,6 +11,7 @@ public class WorldBuilder {
     private WorldBuilder() {
     }
 
+    //methods:
     public static Map<Position, Decor> build(WorldEntity[][] raw, Dimension dimension) {
         WorldBuilder builder = new WorldBuilder();
         for (int x = 0; x < dimension.width; x++) {
@@ -47,7 +48,7 @@ public class WorldBuilder {
             case Key:
                 return new Key();
             case DoorNextClosed:
-                return new Door();
+                return new Door_closed();
             default:
                 return null;
         }
