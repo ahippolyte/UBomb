@@ -6,19 +6,10 @@ import fr.ubx.poo.game.Position;
 
 
 
-public class Box extends Decor implements Movable {
-
-    private Position position;
+public class Box extends Decor {
 
     public String toString(){
         return "Box";
     }
 
-    public boolean canMove(Direction direction){
-        return true;
-    }
-
-    public void doMove(Direction direction){
-        return;
-    }
 }

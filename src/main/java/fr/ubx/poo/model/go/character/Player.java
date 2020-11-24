@@ -42,26 +42,35 @@ public class Player extends GameObject implements Movable {
     @Override
     public boolean canMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
-        return (nextPos.inside(game.getWorld().dimension) && (game.getWorld().isEmpty(nextPos)));
+        Decor nextDecor = game.getWorld().get(nextPos);
+        Position nextNextPos = direction.nextPosition(nextPos);
+
+        if(nextPos.inside(game.getWorld().dimension)){
+            if(game.getWorld().isEmpty(nextPos))
+                return true;
+            else if(nextDecor instanceof Box){
+                if(game.getWorld().isEmpty(nextNextPos) & nextNextPos.inside(game.getWorld().dimension)){
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        }
+        return false;
     }
 
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
-        setPosition(nextPos);
+        Decor nextDecor = game.getWorld().get(nextPos);
 
-
-        /**if(game.getWorld().get(nextPos) instanceof Box){
-            Remove(nextPos);
-        }**/
-    }   
-
-    /**public boolean toRemove(Direction direction) {
-        Position nextPos = direction.nextPosition(getPosition());
-        if(!canMove(direction) && game.getWorld().get(nextPos) instanceof Box){
-            return true;
+        if(nextDecor instanceof Box){
+            game.getWorld().clear(nextPos);
+            game.getWorld().set(direction.nextPosition(nextPos), nextDecor);
+            game.getWorld().setChange(true);
         }
-        return false;
-    }**/
+
+        setPosition(nextPos);
+    }
 
     public void update(long now) {
         if (moveRequested) {

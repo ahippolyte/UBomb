@@ -9,7 +9,6 @@ import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
 import fr.ubx.poo.model.go.character.Player;
-import fr.ubx.poo.model.decor.Box;
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.scene.Group;
@@ -38,7 +37,6 @@ public final class GameEngine {
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
-    private Sprite spriteBox;
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
@@ -73,7 +71,7 @@ public final class GameEngine {
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
 
-
+        game.getWorld().setChange(false);
     }
 
     protected final void buildAndSetGameLoop() {
@@ -130,11 +128,18 @@ public final class GameEngine {
                 processInput(now);
             }
         }.start();
+
     }
 
 
     private void update(long now) {
         player.update(now);
+
+        if(game.getWorld().hasChanged()){
+            sprites.forEach(Sprite::remove);
+            sprites.clear();
+            game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+        }
 
         if (player.isAlive() == false) {
             gameLoop.stop();
@@ -144,6 +149,8 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Gagné", Color.BLUE);
         }
+
+        game.getWorld().setChange(false);
     }
 
     private void render() {
