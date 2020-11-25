@@ -5,6 +5,7 @@
 package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
@@ -37,7 +38,7 @@ public final class GameEngine {
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
-    /*private Sprite spriteMonster;*/
+    //private Sprite spriteMonster;
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
@@ -109,6 +110,17 @@ public final class GameEngine {
         }
         if (input.isMoveUp()) {
             player.requestMove(Direction.N);
+        }
+        if (input.isBomb()) {
+            if(player.getBomb() > 0) {
+                new Bomb(game, player.getPosition());
+                player.BombNumDec();
+                System.out.println("BOMB : plus que " + player.getBomb() + " bombes");
+            }
+            else {
+                System.out.println("Plus de bombe");
+            }
+            //layer.requestMove(Direction.N);
         }
         input.clear();
     }

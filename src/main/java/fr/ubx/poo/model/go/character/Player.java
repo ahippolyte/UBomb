@@ -45,6 +45,16 @@ public class Player extends GameObject implements Movable {
         return direction;
     }
 
+
+    //setters:
+    public void BombNumInc() {
+        bomb++;
+    }
+
+    public void BombNumDec() {
+        bomb--;
+    }
+
     //methods:
     public void requestMove(Direction direction) {
         if (direction != this.direction) {
