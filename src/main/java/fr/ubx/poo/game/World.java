@@ -5,6 +5,8 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.go.Bomb;
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.function.BiConsumer;
@@ -13,7 +15,8 @@ public class World {
     private final Map<Position, Decor> grid;
     private final WorldEntity[][] raw;
     public final Dimension dimension;
-    private boolean changed = true;
+    private boolean needRefresh = true;
+
 
     public World(WorldEntity[][] raw) {
         this.raw = raw;
@@ -22,11 +25,11 @@ public class World {
     }
 
     public boolean hasChanged(){
-        return changed;
+        return needRefresh;
     }
 
     public void setChange(boolean bool){
-        changed = bool;
+        needRefresh = bool;
     }
 
     public Position findPlayer() throws PositionNotFoundException {

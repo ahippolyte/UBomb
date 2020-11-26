@@ -57,11 +57,8 @@ public final class SpriteFactory {
         return new SpriteMonster(layer, monster);
     }*/
 
-    /**public static Sprite createBomb(Pane layer, GameObject go){
-        ImageFactory factory = ImageFactory.getInstance();
-        if (go instanceof Bomb)
-            go = (Bomb) go;
-            return new SpriteBomb(layer, go);
-    }**/
+    public static Sprite createBomb(Pane layer, Bomb bomb){
+        return new SpriteBomb(layer, bomb);
+    }
 
 }

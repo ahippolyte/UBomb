@@ -4,8 +4,11 @@
 
 package fr.ubx.poo.engine;
 
+import fr.ubx.poo.game.BombSteps;
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.go.Bomb;
+import fr.ubx.poo.view.image.ImageFactory;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
@@ -24,7 +27,13 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import static fr.ubx.poo.game.BombSteps.BombA;
+import static fr.ubx.poo.game.BombSteps.BombB;
+import static fr.ubx.poo.game.BombSteps.BombC;
+import static fr.ubx.poo.game.BombSteps.BombD;
 
 public final class GameEngine {
 
@@ -38,6 +47,7 @@ public final class GameEngine {
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
+    private Sprite spriteBomb;
     //private Sprite spriteMonster;
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
@@ -72,7 +82,6 @@ public final class GameEngine {
         // Create decor sprites
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
-        /*spriteMonster = SpriteFactory.createMonster(layer, monster);*/
 
         game.getWorld().setChange(false);
     }
@@ -88,6 +97,7 @@ public final class GameEngine {
 
                 // Graphic update
                 render();
+
                 statusBar.update(game);
             }
         };
@@ -112,10 +122,14 @@ public final class GameEngine {
             player.requestMove(Direction.N);
         }
         if (input.isBomb()) {
-            if(player.getBomb() > 0) {
-                new Bomb(game, player.getPosition());
-                player.BombNumDec();
-                System.out.println("BOMB : plus que " + player.getBomb() + " bombes");
+            if(player.getNumBomb() > 0) {
+                Bomb bomb = new Bomb(game, player.getPosition());
+                game.bombList.add(bomb);
+                DetonateBomb(bomb);
+                game.bombSpriteSetChanged(true);
+                player.bombNumDec();
+
+                System.out.println("BOMB : plus que " + player.getNumBomb() + " bombes et vous avez posé " + game.bombList.size());
             }
             else {
                 System.out.println("Plus de bombe");
@@ -123,6 +137,50 @@ public final class GameEngine {
             //layer.requestMove(Direction.N);
         }
         input.clear();
+    }
+
+    private void DetonateBomb(Bomb bomb){
+        TimerTask updateToStepB = new TimerTask() {
+            public void run() {
+                bomb.setBombStep(BombB);
+                game.bombSpriteSetChanged(true);
+            }
+        };
+
+        TimerTask updateToStepC = new TimerTask() {
+            public void run() {
+                bomb.setBombStep(BombC);
+                game.bombSpriteSetChanged(true);
+            }
+        };
+
+        TimerTask updateToStepD = new TimerTask() {
+            public void run() {
+                bomb.setBombStep(BombD);
+                game.bombSpriteSetChanged(true);
+            }
+        };
+
+        TimerTask Explode = new TimerTask() {
+            public void run() {
+                bomb.Explode();
+                game.bombList.remove(game.bombList.size()-1);
+                game.bombSpriteSetChanged(true);
+            }
+        };
+
+        Timer timer1 = new Timer("Bomb timer 1");
+        timer1.schedule(updateToStepB, 1000L);
+
+        Timer timer2 = new Timer("Bomb timer 2");
+        timer2.schedule(updateToStepC, 2000L);
+
+        Timer timer3 = new Timer("Bomb timer 3");
+        timer3.schedule(updateToStepD, 3000L);
+
+        Timer timerOut = new Timer("Bomb timer final");
+        timerOut.schedule(Explode, 4000L);
+
     }
 
     private void showMessage(String msg, Color color) {
@@ -145,14 +203,17 @@ public final class GameEngine {
 
     }
 
-
     private void update(long now) {
         player.update(now);
 
-        if(game.getWorld().hasChanged() == true){
-            sprites.forEach(Sprite::remove);
-            sprites.clear();
-            game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+        if(game.getWorld().hasChanged()){
+            System.out.println("Rafraichissement des sprites de décor");
+            refreshWorldSprites();
+        }
+
+        if(game.bombSpriteHasChanged()){
+            System.out.println("Rafraichissement des sprites de bombe");
+            refreshBombSprites();
         }
 
         if (player.isAlive() == false) {
@@ -163,8 +224,6 @@ public final class GameEngine {
             gameLoop.stop();
             showMessage("Gagné!", Color.BLUE);
         }
-
-        game.getWorld().setChange(false);
     }
 
     private void render() {
@@ -175,5 +234,26 @@ public final class GameEngine {
 
     public void start() {
         gameLoop.start();
+    }
+
+    private void refreshWorldSprites(){
+        sprites.forEach(Sprite::remove);
+        sprites.clear();
+        game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+        game.getWorld().setChange(false);
+        refreshBombSprites();
+    }
+
+    private void refreshBombSprites(){
+        sprites.forEach(Sprite::remove);
+        sprites.clear();
+        game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+        if(!game.bombList.isEmpty()){
+            for(int i=0; i<game.bombList.size(); i++){
+                int finalI = i;
+                game.getWorld().forEach( (pos, d) -> sprites.add(SpriteFactory.createBomb(layer, game.bombList.get(finalI))));
+            }
+        }
+        game.bombSpriteSetChanged(false);
     }
 }

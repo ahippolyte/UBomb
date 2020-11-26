@@ -4,7 +4,9 @@
 
 package fr.ubx.poo.view.image;
 
+import fr.ubx.poo.game.BombSteps;
 import fr.ubx.poo.game.Direction;
+import fr.ubx.poo.model.go.Bomb;
 import javafx.scene.image.Image;
 
 import static fr.ubx.poo.view.image.ImageResource.*;
@@ -20,6 +22,11 @@ public final class ImageFactory {
     private final ImageResource[] digits = new ImageResource[]{
             DIGIT_0, DIGIT_1, DIGIT_2, DIGIT_3, DIGIT_4,
             DIGIT_5, DIGIT_6, DIGIT_7, DIGIT_8, DIGIT_9,
+    };
+
+    private final ImageResource[] bombSteps = new ImageResource[]{
+            // Steps { A, B, C, D }
+            Bomb4, Bomb3, Bomb2, Bomb1,
     };
 
     private ImageFactory() {
@@ -55,6 +62,11 @@ public final class ImageFactory {
 
     public Image getPlayer(Direction direction) {
         return get(directions[direction.ordinal()]);
+    }
+
+    public Image getBombStepImage(BombSteps step) {
+        Bomb bomb;
+        return get(bombSteps[step.ordinal()]);
     }
 
     /**

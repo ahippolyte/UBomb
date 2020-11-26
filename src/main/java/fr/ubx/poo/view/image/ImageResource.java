@@ -30,7 +30,7 @@ public enum ImageResource {
     BombNumberDec("bonus_bomb_nb_dec.png"),
     BombRangeInc("bonus_bomb_range_inc.png"),
     BombRangeDec("bonus_bomb_range_dec.png"),
-    Bomb("bomb4.png"),
+    Bomb4("bomb4.png"),
     Bomb3("bomb3.png"),
     Bomb2("bomb2.png"),
     Bomb1("bomb1.png"),

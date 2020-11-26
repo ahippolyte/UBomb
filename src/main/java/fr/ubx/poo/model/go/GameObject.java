@@ -27,5 +27,8 @@ public abstract class GameObject extends Entity {
     public void setPosition(Position position) {
         this.position = position;
     }
+    public Game getGame(){
+        return game;
+    }
 
 }

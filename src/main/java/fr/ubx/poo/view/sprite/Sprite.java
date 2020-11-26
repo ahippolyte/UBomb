@@ -46,4 +46,5 @@ public abstract class Sprite {
         layer.getChildren().remove(imageView);
         imageView = null;
     }
+
 }

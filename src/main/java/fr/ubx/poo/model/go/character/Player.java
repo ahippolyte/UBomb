@@ -38,7 +38,7 @@ public class Player extends GameObject implements Movable {
         return lives;
     }
     public int getKey() { return key; }
-    public int getBomb() {return bomb; }
+    public int getNumBomb() {return bomb; }
     public int getRange() {return range; }
 
     public Direction getDirection() {
@@ -47,11 +47,17 @@ public class Player extends GameObject implements Movable {
 
 
     //setters:
-    public void BombNumInc() {
+    public void bombNumInc() {
         bomb++;
     }
+    public void bombNumDec() {
+        bomb--;
+    }
 
-    public void BombNumDec() {
+    public void livesNumInc() {
+        bomb++;
+    }
+    public void livesNumDec() {
         bomb--;
     }
 

@@ -9,10 +9,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.model.go.character.Player;
+import fr.ubx.poo.view.sprite.Sprite;
 
 public class Game {
 
@@ -23,6 +28,8 @@ public class Game {
     public int initPlayerKey;
     public int initPlayerBomb;
     public int initPlayerRange;
+    public List<Bomb> bombList = new ArrayList<>();
+    private boolean bombSpriteChange = false;
 
     public Game(String worldPath) {
         world = new WorldStatic();
@@ -51,6 +58,7 @@ public class Game {
     }
     public int getInitPlayerBomb() { return initPlayerBomb; }
     public int getInitPlayerRange() { return initPlayerRange; }
+    public boolean bombSpriteHasChanged(){ return bombSpriteChange; }
 
     public World getWorld() {
         return world;
@@ -59,6 +67,8 @@ public class Game {
         return this.player;
     }
 
+    //setters
+    public void bombSpriteSetChanged(boolean bool){ bombSpriteChange = bool; }
 
     //methods:
     private void loadConfig(String path) {
