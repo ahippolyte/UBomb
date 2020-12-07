@@ -4,11 +4,9 @@
 
 package fr.ubx.poo.engine;
 
-import fr.ubx.poo.game.BombSteps;
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.go.Bomb;
-import fr.ubx.poo.view.image.ImageFactory;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
@@ -27,13 +25,6 @@ import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
-
-import static fr.ubx.poo.game.BombSteps.BombA;
-import static fr.ubx.poo.game.BombSteps.BombB;
-import static fr.ubx.poo.game.BombSteps.BombC;
-import static fr.ubx.poo.game.BombSteps.BombD;
 
 public final class GameEngine {
 
@@ -41,14 +32,14 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
+    public List<Bomb> bombList = new ArrayList<>();
     private final List<Sprite> sprites = new ArrayList<>();
     private StatusBar statusBar;
     private Pane layer;
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
-    private Sprite spriteBomb;
-    //private Sprite spriteMonster;
+    private boolean explosionCreated = false;
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
@@ -123,64 +114,15 @@ public final class GameEngine {
         }
         if (input.isBomb()) {
             if(player.getNumBomb() > 0) {
-                Bomb bomb = new Bomb(game, player.getPosition());
-                game.bombList.add(bomb);
-                DetonateBomb(bomb);
-                game.bombSpriteSetChanged(true);
+                Bomb bomb = new Bomb(game, player.getPosition(), now);
+                bombList.add(bomb);
                 player.bombNumDec();
-
-                System.out.println("BOMB : plus que " + player.getNumBomb() + " bombes et vous avez posé " + game.bombList.size());
             }
             else {
                 System.out.println("Plus de bombe");
             }
-            //layer.requestMove(Direction.N);
         }
         input.clear();
-    }
-
-    private void DetonateBomb(Bomb bomb){
-        TimerTask updateToStepB = new TimerTask() {
-            public void run() {
-                bomb.setBombStep(BombB);
-                game.bombSpriteSetChanged(true);
-            }
-        };
-
-        TimerTask updateToStepC = new TimerTask() {
-            public void run() {
-                bomb.setBombStep(BombC);
-                game.bombSpriteSetChanged(true);
-            }
-        };
-
-        TimerTask updateToStepD = new TimerTask() {
-            public void run() {
-                bomb.setBombStep(BombD);
-                game.bombSpriteSetChanged(true);
-            }
-        };
-
-        TimerTask Explode = new TimerTask() {
-            public void run() {
-                bomb.Explode();
-                game.bombList.remove(game.bombList.size()-1);
-                game.bombSpriteSetChanged(true);
-            }
-        };
-
-        Timer timer1 = new Timer("Bomb timer 1");
-        timer1.schedule(updateToStepB, 1000L);
-
-        Timer timer2 = new Timer("Bomb timer 2");
-        timer2.schedule(updateToStepC, 2000L);
-
-        Timer timer3 = new Timer("Bomb timer 3");
-        timer3.schedule(updateToStepD, 3000L);
-
-        Timer timerOut = new Timer("Bomb timer final");
-        timerOut.schedule(Explode, 4000L);
-
     }
 
     private void showMessage(String msg, Color color) {
@@ -203,17 +145,39 @@ public final class GameEngine {
 
     }
 
-    private void update(long now) {
+    private void update(long now){
         player.update(now);
+
+        if(!bombList.isEmpty()) {
+            for (int i = 0; i < bombList.size(); i++) {
+                bombList.get(i).update(now);
+                if(bombList.get(i).destroyed[0]){
+                    Position bombPos = bombList.get(i).getPosition();
+                    for (int d=-game.getPlayer().getRange(); d<game.getPlayer().getRange() + 1; d++) {
+                        Position newPosX = new Position(bombPos.x + d, bombPos.y);
+                        Position newPosY = new Position(bombPos.x, bombPos.y+d);
+
+                        Sprite explosionX = SpriteFactory.createExplosion(layer, newPosX);
+                        Sprite explosionY = SpriteFactory.createExplosion(layer, newPosY);
+
+                        sprites.add(explosionX);
+                        sprites.add(explosionY);
+                    }
+                }
+
+                refreshBombSprites();
+
+                if(bombList.get(i).destroyed[1]) {
+                    game.getWorld().setChange(true);
+                    bombList.remove(bombList.get(i));
+                }
+            }
+        }
 
         if(game.getWorld().hasChanged()){
             System.out.println("Rafraichissement des sprites de décor");
             refreshWorldSprites();
-        }
-
-        if(game.bombSpriteHasChanged()){
-            System.out.println("Rafraichissement des sprites de bombe");
-            refreshBombSprites();
+            game.getWorld().setChange(false);
         }
 
         if (player.isAlive() == false) {
@@ -245,15 +209,13 @@ public final class GameEngine {
     }
 
     private void refreshBombSprites(){
-        sprites.forEach(Sprite::remove);
-        sprites.clear();
-        game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
-        if(!game.bombList.isEmpty()){
-            for(int i=0; i<game.bombList.size(); i++){
+        if(!bombList.isEmpty()){
+            for(int i=0; i<bombList.size(); i++){
                 int finalI = i;
-                game.getWorld().forEach( (pos, d) -> sprites.add(SpriteFactory.createBomb(layer, game.bombList.get(finalI))));
+                sprites.remove(bombList.get(finalI));
+                sprites.add(SpriteFactory.createBomb(layer, bombList.get(finalI)));
             }
         }
-        game.bombSpriteSetChanged(false);
+        //game.bombSpriteSetChanged(false);
     }
 }

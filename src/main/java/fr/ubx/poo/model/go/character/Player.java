@@ -8,11 +8,6 @@ import fr.ubx.poo.game.*;
 import fr.ubx.poo.model.decor.*;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.go.GameObject;
-import fr.ubx.poo.view.image.ImageFactory;
-import fr.ubx.poo.view.sprite.SpriteDecor;
-import javafx.scene.layout.Pane;
-
-import static fr.ubx.poo.view.image.ImageResource.Door_opened;
 
 public class Player extends GameObject implements Movable {
     private final boolean alive = true;
@@ -55,10 +50,17 @@ public class Player extends GameObject implements Movable {
     }
 
     public void livesNumInc() {
-        bomb++;
+        lives++;
     }
     public void livesNumDec() {
-        bomb--;
+        lives--;
+    }
+
+    public void rangeInc() {
+        range++;
+    }
+    public void rangeDec() {
+        range--;
     }
 
     //methods:
@@ -165,7 +167,12 @@ public class Player extends GameObject implements Movable {
             /*game.getWorld().clear(nextPos);
             game.getWorld().set(nextPos,game.getWorld().get(Door_opened));*/
             key++;
-
+        }
+        if(nextDecor instanceof Door_closed){
+            Decor door_opened = new Decor();
+            game.getWorld().clear(nextPos);
+            game.getWorld().setChange(true);
+            //game.getWorld().set(nextPos,game.getWorld().get(Door_opened));
         }
 
         setPosition(nextPos);

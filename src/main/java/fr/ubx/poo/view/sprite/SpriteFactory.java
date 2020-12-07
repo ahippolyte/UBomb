@@ -10,9 +10,9 @@ import static fr.ubx.poo.view.image.ImageResource.*;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.*;
 import fr.ubx.poo.model.go.Bomb;
-import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.model.go.character.*;
 import fr.ubx.poo.view.image.ImageFactory;
+import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 
 
@@ -59,6 +59,10 @@ public final class SpriteFactory {
 
     public static Sprite createBomb(Pane layer, Bomb bomb){
         return new SpriteBomb(layer, bomb);
+    }
+
+    public static Sprite createExplosion(Pane layer, Position position){
+        return new SpriteExplosion(layer, position);
     }
 
 }

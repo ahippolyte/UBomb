@@ -6,7 +6,6 @@ package fr.ubx.poo.view.image;
 
 import fr.ubx.poo.game.BombSteps;
 import fr.ubx.poo.game.Direction;
-import fr.ubx.poo.model.go.Bomb;
 import javafx.scene.image.Image;
 
 import static fr.ubx.poo.view.image.ImageResource.*;
@@ -25,8 +24,7 @@ public final class ImageFactory {
     };
 
     private final ImageResource[] bombSteps = new ImageResource[]{
-            // Steps { A, B, C, D }
-            Bomb4, Bomb3, Bomb2, Bomb1,
+            Bomb4, Bomb3, Bomb2, Bomb1, Explosion,
     };
 
     private ImageFactory() {
@@ -65,7 +63,6 @@ public final class ImageFactory {
     }
 
     public Image getBombStepImage(BombSteps step) {
-        Bomb bomb;
         return get(bombSteps[step.ordinal()]);
     }
 

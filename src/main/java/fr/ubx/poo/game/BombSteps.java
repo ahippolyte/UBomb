@@ -8,5 +8,6 @@ public enum BombSteps {
     BombA,
     BombB,
     BombC,
-    BombD,;
+    BombD,
+    Explosion;
 }
