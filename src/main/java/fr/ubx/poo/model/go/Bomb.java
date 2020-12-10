@@ -79,8 +79,6 @@ public class Bomb extends GameObject {
                     System.out.println("Craaack");
                     game.getWorld().clear(yAxis);
                 }
-
-                //Sprite newExplosion = SpriteFactory.createEffect(layer, pos);
             }
 
             destroyed[0] = true;
