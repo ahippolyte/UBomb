@@ -6,4 +6,8 @@ public class Door_closed extends Decor {
         return "Door_closed";
     }
 
+    public boolean plyCanMoveOn() {
+        return false;
+    }
+
 }

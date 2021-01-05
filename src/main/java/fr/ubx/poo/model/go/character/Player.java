@@ -29,39 +29,23 @@ public class Player extends GameObject implements Movable {
     }
 
     //getters:
-    public int getLives() {
-        return lives;
-    }
-    public int getKey() { return key; }
     public int getNumBomb() {return bomb; }
+    public int getLives() { return lives; }
     public int getRange() {return range; }
-
-    public Direction getDirection() {
-        return direction;
-    }
-
+    public int getKey() { return key; }
+    public boolean isWinner() { return winner; }
+    public boolean isAlive() { return alive; }
+    public Direction getDirection() { return direction; }
 
     //setters:
-    public void bombNumInc() {
-        bomb++;
-    }
-    public void bombNumDec() {
-        bomb--;
-    }
-
-    public void livesNumInc() {
-        lives++;
-    }
-    public void livesNumDec() {
-        lives--;
-    }
-
-    public void rangeInc() {
-        range++;
-    }
-    public void rangeDec() {
-        range--;
-    }
+    public void bombNumInc() { bomb++; }
+    public void bombNumDec() { bomb--; }
+    public void livesNumInc() { lives++; }
+    public void livesNumDec() { lives--; }
+    public void bombRangeInc() { range++; }
+    public void bombRangeDec() { range--; }
+    public void keyNumInc(){ key++; }
+    public void setWinner(){ winner = true; }
 
     //methods:
     public void requestMove(Direction direction) {
@@ -71,41 +55,13 @@ public class Player extends GameObject implements Movable {
         moveRequested = true;
     }
 
-    @Override
     public boolean canMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         Decor nextDecor = game.getWorld().get(nextPos);
 
-        if(nextPos.inside(game.getWorld().dimension)) {
-            if (game.getWorld().isEmpty(nextPos)) {
+        if (nextPos.inside(game.getWorld().dimension)) {
+            if (game.getWorld().isEmpty(nextPos) || nextDecor.plyCanMoveOn()) {
                 return true;
-            }
-            if (nextDecor != null) {
-                if (nextDecor.toString() == "Box") {
-                    Position nextNextPos = direction.nextPosition(nextPos);
-                    if (game.getWorld().isEmpty(nextNextPos) & nextNextPos.inside(game.getWorld().dimension)) {
-                        return true;
-                    }
-                    return false;
-                } else if (nextDecor.toString() == "Princess") {
-                    return true;
-                } else if (nextDecor.toString() == "Heart") {
-                    return true;
-                } else if (nextDecor.toString() == "BombNumberInc") {
-                    return true;
-                } else if (nextDecor.toString() == "BombNumberDec") {
-                    return true;
-                } else if (nextDecor.toString() == "BombRangeInc") {
-                    return true;
-                } else if (nextDecor.toString() == "BombRangeDec") {
-                    return true;
-                } else if (nextDecor.toString() == "Key") {
-                    return true;
-                } else if (nextDecor.toString() == "Door_closed") {
-                    return true;
-                } else {
-                    return false;
-                }
             }
             return false;
         }
@@ -115,58 +71,25 @@ public class Player extends GameObject implements Movable {
     public void doMove(Direction direction) {
         Position nextPos = direction.nextPosition(getPosition());
         Decor nextDecor = game.getWorld().get(nextPos);
-
-        if(nextDecor != null){
-            if(nextDecor.toString() == "Box"){
+        if (game.getWorld().isEmpty(nextPos)) {
+            setPosition(nextPos);
+        }
+        else if (nextDecor.toString() == "Box") {
+            Position nextNextPos = direction.nextPosition(nextPos);
+            Decor nextNextDecor = game.getWorld().get(nextNextPos);
+            if (game.getWorld().isEmpty(nextNextPos) & nextNextPos.inside(game.getWorld().dimension)) {
+                setPosition(nextDecor.plyDoMoveOn(getPosition(), direction));
                 game.getWorld().clear(nextPos);
-                Position nexNextPos = direction.nextPosition(nextPos);
-                game.getWorld().set(nexNextPos, nextDecor);
-                game.getWorld().setChange(true);
-            }
-            else if(nextDecor.toString() == "Princess"){
-                winner=true;
-            }
-            else if(nextDecor.toString() == "Heart"){
-                game.getWorld().clear(nextPos);
-                game.getWorld().setChange(true);
-                lives++;
-            }
-            else if(nextDecor.toString() == "BombNumberInc"){
-                game.getWorld().clear(nextPos);
-                game.getWorld().setChange(true);
-                bomb++;
-            }
-            else if(nextDecor.toString() == "BombNumberDec"){
-                game.getWorld().clear(nextPos);
-                game.getWorld().setChange(true);
-                if (bomb>1){
-                    bomb--;
-                }
-            }
-            else if(nextDecor.toString() == "BombRangeInc"){
-                game.getWorld().clear(nextPos);
-                game.getWorld().setChange(true);
-                range++;
-            }
-            else if(nextDecor.toString() == "BombRangeDec"){
-                game.getWorld().clear(nextPos);
-                game.getWorld().setChange(true);
-                if (range>1){
-                    range--;
-                }
-            }
-            else if(nextDecor.toString() == "Key"){
-                game.getWorld().clear(nextPos);
-                game.getWorld().setChange(true);
-                key++;
-            }
-            else if(nextDecor.toString() == "Door_closed"){
-                game.getWorld().clear(nextPos);
+                game.getWorld().set(nextNextPos, nextDecor);
                 game.getWorld().setChange(true);
             }
         }
-
-        setPosition(nextPos);
+        else {
+            setPosition(nextPos);
+            game.getWorld().clear(nextPos);
+            game.getWorld().setChange(true);
+            nextDecor.plyGetBonus(game.getPlayer());
+        }
     }
 
     public void update(long now) {
@@ -176,14 +99,6 @@ public class Player extends GameObject implements Movable {
             }
         }
         moveRequested = false;
-    }
-
-    public boolean isWinner() {
-        return winner;
-    }
-
-    public boolean isAlive() {
-        return alive;
     }
 
 }
