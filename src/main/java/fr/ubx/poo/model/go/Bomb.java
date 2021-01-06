@@ -53,9 +53,10 @@ public class Bomb extends GameObject {
         }
     }
 
-    public void Explode() {
+    /**public void Explode() {
         if (!destroyed[0]) {
             System.out.println("BOUUUM");
+            destroyed[0] = true;
 
             if (game.getPlayer().getNumBomb() <= 0) {
                 game.getPlayer().bombNumInc();
@@ -63,28 +64,78 @@ public class Bomb extends GameObject {
             for (int i = -game.getPlayer().getRange(); i < game.getPlayer().getRange() + 1; i++) {
                 Position xAxis = new Position(getPosition().x + i, getPosition().y);
                 Position yAxis = new Position(getPosition().x, getPosition().y + i);
+                Decor xDecor = game.getWorld().get(xAxis);
+                Decor yDecor = game.getWorld().get(yAxis);
 
                 if (game.getPlayer().getPosition().equals(xAxis) || game.getPlayer().getPosition().equals(yAxis)) {
                     game.getPlayer().livesNumDec();
                 }
+
+                if(game.getPlayer().getRange() > 1){
+                    for(i=1; i<2; i++) {
+                        Position $xAxis = new Position(getPosition().x - i, getPosition().y);
+                        Position $yAxis = new Position(getPosition().x, getPosition().y - i);
+                        Decor $xDecor = game.getWorld().get($xAxis);
+                        Decor $yDecor = game.getWorld().get($yAxis);
+                        if(!game.getWorld().isEmpty($xAxis)){
+                            if ($xDecor.isBreakable()) {
+                                game.getWorld().clear($xAxis);
+                            }
+                        }
+                        if(!game.getWorld().isEmpty($yAxis)){
+                            if ($yDecor.isBreakable()) {
+                                game.getWorld().clear($yAxis);
+                            }
+                        }
+                    }
+                }
+                else {
+                if (!game.getWorld().isEmpty(xAxis)) {
+                    if (xDecor.isBreakable()) {
+                        game.getWorld().clear(xAxis);
+                    }
+                }
+
+                if (!game.getWorld().isEmpty(yAxis)) {
+                    if (yDecor.isBreakable()) {
+                        game.getWorld().clear(yAxis);
+                    }
+                }
+                }
+            }
+        }
+    }**/
+
+    public void Explode() {
+        if (!destroyed[0]) {
+            System.out.println("BOUUUM");
+            destroyed[0] = true;
+
+            if (game.getPlayer().getNumBomb() <= 0) {
+                game.getPlayer().bombNumInc();
+            }
+            for (int i = -game.getPlayer().getRange(); i < game.getPlayer().getRange() + 1; i++) {
+                Position xAxis = new Position(getPosition().x + i, getPosition().y);
+                Position yAxis = new Position(getPosition().x, getPosition().y + i);
                 Decor xDecor = game.getWorld().get(xAxis);
                 Decor yDecor = game.getWorld().get(yAxis);
 
-                if(!game.getWorld().isEmpty(xAxis)) {
+                if (game.getPlayer().getPosition().equals(xAxis) || game.getPlayer().getPosition().equals(yAxis)) {
+                    game.getPlayer().livesNumDec();
+                }
+
+                if (!game.getWorld().isEmpty(xAxis)) {
                     if (xDecor.isBreakable()) {
                         game.getWorld().clear(xAxis);
-                        game.getWorld().setChange(true);
                     }
                 }
 
-                if(!game.getWorld().isEmpty(yAxis)) {
+                if (!game.getWorld().isEmpty(yAxis)) {
                     if (yDecor.isBreakable()) {
-                        game.getWorld().clear(xAxis);
+                        game.getWorld().clear(yAxis);
                     }
                 }
             }
-
-            destroyed[0] = true;
         }
     }
 }
