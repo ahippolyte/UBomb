@@ -16,4 +16,8 @@ public class Heart extends Decor {
         ply.livesNumInc();
     }
 
+    public boolean isBreakable(){
+        return true;
+    }
+
 }

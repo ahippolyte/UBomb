@@ -21,6 +21,10 @@ public class Decor extends Entity {
         return false;
     }
 
+    public boolean isBreakable(){
+        return false;
+    }
+
     public void plyGetBonus(Player ply){
     }
 }

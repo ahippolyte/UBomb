@@ -18,4 +18,8 @@ public class BombNumberDec extends Decor {
         }
     }
 
+    public boolean isBreakable(){
+        return true;
+    }
+
 }

@@ -70,14 +70,17 @@ public class Bomb extends GameObject {
                 Decor xDecor = game.getWorld().get(xAxis);
                 Decor yDecor = game.getWorld().get(yAxis);
 
-                if (xDecor instanceof Box) {
-                    System.out.println("Craaack");
-                    game.getWorld().clear(xAxis);
+                if(!game.getWorld().isEmpty(xAxis)) {
+                    if (xDecor.isBreakable()) {
+                        game.getWorld().clear(xAxis);
+                        game.getWorld().setChange(true);
+                    }
                 }
 
-                if (yDecor instanceof Box) {
-                    System.out.println("Craaack");
-                    game.getWorld().clear(yAxis);
+                if(!game.getWorld().isEmpty(yAxis)) {
+                    if (yDecor.isBreakable()) {
+                        game.getWorld().clear(xAxis);
+                    }
                 }
             }
 

@@ -16,4 +16,8 @@ public class BombRangeDec extends Decor {
         }
     }
 
+    public boolean isBreakable(){
+        return true;
+    }
+
 }

@@ -10,7 +10,7 @@ import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.go.GameObject;
 
 public class Player extends GameObject implements Movable {
-    private final boolean alive = true;
+    private boolean alive = true;
     Direction direction;
     private boolean moveRequested = false;
     private int lives ;
@@ -46,6 +46,7 @@ public class Player extends GameObject implements Movable {
     public void bombRangeDec() { range--; }
     public void keyNumInc(){ key++; }
     public void setWinner(){ winner = true; }
+    public void setAlive(boolean bool) {alive = bool;}
 
     //methods:
     public void requestMove(Direction direction) {
@@ -98,6 +99,10 @@ public class Player extends GameObject implements Movable {
             }
         }
         moveRequested = false;
+
+        if(getLives() <= 0){
+            setAlive(false);
+        }
     }
 
 }

@@ -14,4 +14,8 @@ public class BombRangeInc extends Decor {
         ply.bombRangeInc();
     }
 
+    public boolean isBreakable(){
+        return true;
+    }
+
 }
