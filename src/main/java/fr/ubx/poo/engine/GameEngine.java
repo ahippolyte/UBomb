@@ -76,7 +76,7 @@ public final class GameEngine {
 
         game.getWorld().setChange(false);
     }
-
+    
     protected final void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {

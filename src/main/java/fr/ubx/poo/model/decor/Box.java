@@ -13,9 +13,4 @@ public class Box extends Decor {
         return true;
     }
 
-    public Position plyDoMoveOn(Position position, Direction direction){
-        Position nextPos = direction.nextPosition(position);
-        return nextPos;
-    }
-
 }

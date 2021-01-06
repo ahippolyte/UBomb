@@ -76,9 +76,8 @@ public class Player extends GameObject implements Movable {
         }
         else if (nextDecor.toString() == "Box") {
             Position nextNextPos = direction.nextPosition(nextPos);
-            Decor nextNextDecor = game.getWorld().get(nextNextPos);
             if (game.getWorld().isEmpty(nextNextPos) & nextNextPos.inside(game.getWorld().dimension)) {
-                setPosition(nextDecor.plyDoMoveOn(getPosition(), direction));
+                setPosition(nextPos);
                 game.getWorld().clear(nextPos);
                 game.getWorld().set(nextNextPos, nextDecor);
                 game.getWorld().setChange(true);

@@ -21,10 +21,6 @@ public class Decor extends Entity {
         return false;
     }
 
-    public Position plyDoMoveOn(Position position, Direction direction){
-        return position;
-    }
-
     public void plyGetBonus(Player ply){
     }
 }
