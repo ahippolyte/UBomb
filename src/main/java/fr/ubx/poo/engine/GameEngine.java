@@ -153,7 +153,7 @@ public final class GameEngine {
                 bombList.get(i).update(now);
                 if(bombList.get(i).destroyed[0]){
                     Position bombPos = bombList.get(i).getPosition();
-                    for (int d=-game.getPlayer().getRange(); d<game.getPlayer().getRange() + 1; d++) {
+                    /**for (int d=-game.getPlayer().getRange(); d<game.getPlayer().getRange() + 1; d++) {
                         Position newPosX = new Position(bombPos.x + d, bombPos.y);
                         Position newPosY = new Position(bombPos.x, bombPos.y+d);
 
@@ -162,7 +162,31 @@ public final class GameEngine {
 
                         sprites.add(explosionX);
                         sprites.add(explosionY);
+                    }**/
+                    for(int t=0; t<bombList.get(i).spriteRange[0]+1; t++){
+                        Position newPosT = new Position(bombPos.x, bombPos.y-t);
+                        Sprite explosionT = SpriteFactory.createExplosion(layer, newPosT);
+                        sprites.add(explosionT);
                     }
+
+                    for(int b=0; b<bombList.get(i).spriteRange[1]+1; b++){
+                        Position newPosB = new Position(bombPos.x, bombPos.y+b);
+                        Sprite explosionB = SpriteFactory.createExplosion(layer, newPosB);
+                        sprites.add(explosionB);
+                    }
+
+                    for(int l=0; l<bombList.get(i).spriteRange[2]+1; l++){
+                        Position newPosL = new Position(bombPos.x-l, bombPos.y);
+                        Sprite explosionL = SpriteFactory.createExplosion(layer, newPosL);
+                        sprites.add(explosionL);
+                    }
+
+                    for(int r=0; r<bombList.get(i).spriteRange[3]+1; r++){
+                        Position newPosR = new Position(bombPos.x+r, bombPos.y);
+                        Sprite explosionR = SpriteFactory.createExplosion(layer, newPosR);
+                        sprites.add(explosionR);
+                    }
+
                 }
 
                 refreshBombSprites();

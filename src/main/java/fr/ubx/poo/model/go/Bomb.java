@@ -3,7 +3,6 @@ package fr.ubx.poo.model.go;
 import fr.ubx.poo.game.*;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.Game;
-import fr.ubx.poo.model.decor.Box;
 import fr.ubx.poo.model.decor.Decor;
 
 import static fr.ubx.poo.game.BombSteps.*;
@@ -12,6 +11,7 @@ public class Bomb extends GameObject {
     private BombSteps step;
     private long creationDate;
     public boolean[] destroyed = new boolean[2];
+    public int[] spriteRange = new int[4];
 
     public Bomb(Game game, Position position, long date){
         super(game, position);
@@ -55,36 +55,76 @@ public class Bomb extends GameObject {
 
     public void Explode() {
         if (!destroyed[0]) {
-            System.out.println("BOUUUM");
 
+            //Bomb consumption
             if (game.getPlayer().getNumBomb() <= 0) {
                 game.getPlayer().bombNumInc();
             }
-            for (int i = -game.getPlayer().getRange(); i < game.getPlayer().getRange() + 1; i++) {
-                Position xAxis = new Position(getPosition().x + i, getPosition().y);
-                Position yAxis = new Position(getPosition().x, getPosition().y + i);
 
-                if (game.getPlayer().getPosition().equals(xAxis) || game.getPlayer().getPosition().equals(yAxis)) {
-                    game.getPlayer().livesNumDec();
-                }
-                Decor xDecor = game.getWorld().get(xAxis);
-                Decor yDecor = game.getWorld().get(yAxis);
+            //player and decor damages
+            Position bombPos = getPosition();
+            damageAtPos(bombPos);
 
-                if(!game.getWorld().isEmpty(xAxis)) {
-                    if (xDecor.isBreakable()) {
-                        game.getWorld().clear(xAxis);
-                        game.getWorld().setChange(true);
-                    }
-                }
-
-                if(!game.getWorld().isEmpty(yAxis)) {
-                    if (yDecor.isBreakable()) {
-                        game.getWorld().clear(xAxis);
-                    }
-                }
+            //top
+            int i = 1;
+            Position topIterPos = new Position(bombPos.x, bombPos.y-i);
+            while(i<game.getPlayer().getRange() && game.getWorld().isEmpty(topIterPos)){
+                i++;
+                topIterPos = new Position(bombPos.x, bombPos.y-i);
             }
+            damageAtPos(topIterPos);
+            spriteRange[0] = i;
+
+            //bottom
+            int j = 0;
+            Position bottomIterPos = new Position(bombPos.x, bombPos.y+j);
+            while(j<game.getPlayer().getRange() && game.getWorld().isEmpty(bottomIterPos)){
+                j++;
+                bottomIterPos = new Position(bombPos.x, bombPos.y+j);
+            }
+            damageAtPos(bottomIterPos);
+            spriteRange[1] = i;
+
+            //left
+            int k = 1;
+            Position leftIterPos = new Position(bombPos.x-k, bombPos.y);
+            while(k<game.getPlayer().getRange() && game.getWorld().isEmpty(leftIterPos)){
+                k++;
+                leftIterPos = new Position(bombPos.x-k, bombPos.y);
+            }
+            damageAtPos(leftIterPos);
+            spriteRange[2] = k;
+
+            //right
+            int l = 1;
+            Position rightIterPos = new Position(bombPos.x+l, bombPos.y);
+            while(l<game.getPlayer().getRange() && game.getWorld().isEmpty(rightIterPos)){
+                l++;
+                rightIterPos = new Position(bombPos.x+l, bombPos.y);
+            }
+            damageAtPos(rightIterPos);
+            spriteRange[3] = l;
+
+            System.out.println("Portée haut : " + i);
+            System.out.println("Portée bas : " + j);
+            System.out.println("Portée gauche : " + k);
+            System.out.println("Portée droite : " + l);
 
             destroyed[0] = true;
         }
     }
+
+    public void damageAtPos(Position pos){
+        if(!game.getWorld().isEmpty(pos)){
+            Decor decor = game.getWorld().get(pos);
+            if(decor.isBreakable()){
+                game.getWorld().clear(pos);
+                game.getWorld().setChange(true);
+            }
+        }
+        if (game.getPlayer().getPosition().equals(pos)) {
+            game.getPlayer().livesNumDec();
+        }
+    }
+
 }
