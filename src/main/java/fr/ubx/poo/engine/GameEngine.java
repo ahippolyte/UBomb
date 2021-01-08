@@ -8,6 +8,7 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.Bomb;
+import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
 import fr.ubx.poo.game.Game;
@@ -33,6 +34,7 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
+    private List<Monster> monsterList = new ArrayList<>();
     public List<Bomb> bombList = new ArrayList<>();
     private final List<Sprite> sprites = new ArrayList<>();
     private StatusBar statusBar;
@@ -71,9 +73,21 @@ public final class GameEngine {
         input = new Input(scene);
         root.getChildren().add(layer);
         statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
-        // Create decor sprites
+
+        //Create decor sprites
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
+
+        //Initialize monsters
+        for( Position monsterPos : game.getWorld().findMonsters() ) {
+            monsterList.add(new Monster(game, monsterPos));
+        }
+
+        //Create monster sprites
+        for( Monster monster : monsterList ) {
+            sprites.add(SpriteFactory.createMonster(layer, monster));
+        }
+
 
         game.getWorld().setChange(false);
     }

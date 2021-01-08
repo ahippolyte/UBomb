@@ -15,11 +15,18 @@ public class Monster extends GameObject implements Movable {
         this.direction = Direction.random();
     }
 
+    //getters
+    public Direction getDirection() { return direction; }
+
+    //setters
+
     public boolean canMove(Direction direction) {
         return false;
     }
+
     public void doMove(Direction direction) {
     }
+
     public void update(long now) {
         if (canMove(direction)) {
             doMove(direction);

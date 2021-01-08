@@ -65,4 +65,7 @@ public final class SpriteFactory {
         return new SpriteExplosion(layer, position);
     }
 
+    public static Sprite createMonster(Pane layer, Monster monster){
+        return new SpriteMonster(layer, monster);
+    }
 }
