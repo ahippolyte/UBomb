@@ -6,6 +6,7 @@ package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
+import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.view.sprite.Sprite;
@@ -166,17 +167,16 @@ public final class GameEngine {
             for (int i = 0; i < bombList.size(); i++) {
                 bombList.get(i).update(now);
                 if(bombList.get(i).destroyed[0]){
+                    //Explosion sprite at bomb pos
                     Position bombPos = bombList.get(i).getPosition();
-                    for (int d=-game.getPlayer().getRange(); d<game.getPlayer().getRange() + 1; d++) {
-                        Position newPosX = new Position(bombPos.x + d, bombPos.y);
-                        Position newPosY = new Position(bombPos.x, bombPos.y+d);
+                    Sprite explosionBomb = SpriteFactory.createExplosion(layer, bombPos);
+                    sprites.add(explosionBomb);
 
-                        Sprite explosionX = SpriteFactory.createExplosion(layer, newPosX);
-                        Sprite explosionY = SpriteFactory.createExplosion(layer, newPosY);
-
-                        sprites.add(explosionX);
-                        sprites.add(explosionY);
-                    }
+                    //Explosion sprites in each direction
+                    displayExplosionSprites(Direction.N, bombList.get(i));
+                    displayExplosionSprites(Direction.S, bombList.get(i));
+                    displayExplosionSprites(Direction.W, bombList.get(i));
+                    displayExplosionSprites(Direction.E, bombList.get(i));
                 }
 
                 refreshBombSprites();
@@ -201,6 +201,36 @@ public final class GameEngine {
         if (player.isWinner()) {
             gameLoop.stop();
             showMessage("Gagné!", Color.BLUE);
+        }
+    }
+
+    public void displayExplosionSprites(Direction dir, Bomb bomb){
+        int j;
+        switch(dir){
+            case S:
+                j = 1;
+                break;
+            case W:
+                j = 2;
+                break;
+            case E:
+                j = 3;
+                break;
+            default:
+                j = 0;
+        }
+        int i=1;
+        Position nextPos = dir.nextPosition(bomb.getPosition());
+        while(i<bomb.spriteRange[j]+1){
+            if(game.getWorld().isInside(nextPos)) {
+                Decor nextDecor = game.getWorld().get(nextPos);
+                if (game.getWorld().isEmpty(nextPos) || nextDecor.isBreakable()) {
+                    Sprite explosion = SpriteFactory.createExplosion(layer, nextPos);
+                    sprites.add(explosion);
+                }
+                nextPos = dir.nextPosition(nextPos);
+            }
+            i++;
         }
     }
 
