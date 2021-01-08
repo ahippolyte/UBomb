@@ -153,53 +153,16 @@ public final class GameEngine {
             for (int i = 0; i < bombList.size(); i++) {
                 bombList.get(i).update(now);
                 if(bombList.get(i).destroyed[0]){
+                    //Explosion sprite at bomb pos
                     Position bombPos = bombList.get(i).getPosition();
+                    Sprite explosionBomb = SpriteFactory.createExplosion(layer, bombPos);
+                    sprites.add(explosionBomb);
 
-                    for(int t=0; t<bombList.get(i).spriteRange[0]+1; t++){
-                        Position iterPosT = new Position(bombPos.x, bombPos.y-t);
-                        Decor decorPosT = game.getWorld().get(iterPosT);
-                        if(game.getWorld().isInside(iterPosT)) {
-                            if (game.getWorld().isEmpty(iterPosT) || decorPosT.isBreakable()) {
-                                Sprite explosionT = SpriteFactory.createExplosion(layer, iterPosT);
-                                sprites.add(explosionT);
-                            }
-                        }
-                    }
-
-                    for(int b=0; b<bombList.get(i).spriteRange[1]+1; b++){
-                        Position iterPosB = new Position(bombPos.x, bombPos.y+b);
-                        Decor decorPosB = game.getWorld().get(iterPosB);
-                        if(game.getWorld().isInside(iterPosB)) {
-                            if (game.getWorld().isEmpty(iterPosB) || decorPosB.isBreakable()) {
-                                Sprite explosionB = SpriteFactory.createExplosion(layer, iterPosB);
-                                sprites.add(explosionB);
-                            }
-                        }
-                    }
-
-                    for(int l=0; l<bombList.get(i).spriteRange[2]+1; l++){
-                        Position iterPosL = new Position(bombPos.x-l, bombPos.y);
-                        Decor decorPosL = game.getWorld().get(iterPosL);
-                        if(game.getWorld().isInside(iterPosL)) {
-                            if (game.getWorld().isEmpty(iterPosL) || decorPosL.isBreakable()) {
-                                Sprite explosionL = SpriteFactory.createExplosion(layer, iterPosL);
-                                sprites.add(explosionL);
-                            }
-                        }
-
-                    }
-
-                    for(int r=0; r<bombList.get(i).spriteRange[3]+1; r++){
-                        Position iterPosR = new Position(bombPos.x+r, bombPos.y);
-                        Decor decorPosR = game.getWorld().get(iterPosR);
-                        if(game.getWorld().isInside(iterPosR)) {
-                            if (game.getWorld().isEmpty(iterPosR) || decorPosR.isBreakable()) {
-                                Sprite explosionR = SpriteFactory.createExplosion(layer, iterPosR);
-                                sprites.add(explosionR);
-                            }
-                        }
-                    }
-
+                    //Explosion sprites in each direction
+                    displayExplosionSprites(Direction.N, bombList.get(i));
+                    displayExplosionSprites(Direction.S, bombList.get(i));
+                    displayExplosionSprites(Direction.W, bombList.get(i));
+                    displayExplosionSprites(Direction.E, bombList.get(i));
                 }
 
                 refreshBombSprites();
@@ -224,6 +187,36 @@ public final class GameEngine {
         if (player.isWinner()) {
             gameLoop.stop();
             showMessage("Gagné!", Color.BLUE);
+        }
+    }
+
+    public void displayExplosionSprites(Direction dir, Bomb bomb){
+        int j;
+        switch(dir){
+            case S:
+                j = 1;
+                break;
+            case W:
+                j = 2;
+                break;
+            case E:
+                j = 3;
+                break;
+            default:
+                j = 0;
+        }
+        int i=1;
+        Position nextPos = dir.nextPosition(bomb.getPosition());
+        while(i<bomb.spriteRange[j]+1){
+            if(game.getWorld().isInside(nextPos)) {
+                Decor nextDecor = game.getWorld().get(nextPos);
+                if (game.getWorld().isEmpty(nextPos) || nextDecor.isBreakable()) {
+                    Sprite explosion = SpriteFactory.createExplosion(layer, nextPos);
+                    sprites.add(explosion);
+                }
+                nextPos = dir.nextPosition(nextPos);
+            }
+            i++;
         }
     }
 
