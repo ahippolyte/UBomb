@@ -76,14 +76,14 @@ public class Bomb extends GameObject {
             spriteRange[0] = i;
 
             //bottom
-            int j = 0;
+            int j = 1;
             Position bottomIterPos = new Position(bombPos.x, bombPos.y+j);
             while(j<game.getPlayer().getRange() && game.getWorld().isEmpty(bottomIterPos)){
                 j++;
                 bottomIterPos = new Position(bombPos.x, bombPos.y+j);
             }
             damageAtPos(bottomIterPos);
-            spriteRange[1] = i;
+            spriteRange[1] = j;
 
             //left
             int k = 1;

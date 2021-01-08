@@ -6,6 +6,7 @@ package fr.ubx.poo.engine;
 
 import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Position;
+import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.view.sprite.Sprite;
 import fr.ubx.poo.view.sprite.SpriteFactory;
@@ -153,38 +154,50 @@ public final class GameEngine {
                 bombList.get(i).update(now);
                 if(bombList.get(i).destroyed[0]){
                     Position bombPos = bombList.get(i).getPosition();
-                    /**for (int d=-game.getPlayer().getRange(); d<game.getPlayer().getRange() + 1; d++) {
-                        Position newPosX = new Position(bombPos.x + d, bombPos.y);
-                        Position newPosY = new Position(bombPos.x, bombPos.y+d);
 
-                        Sprite explosionX = SpriteFactory.createExplosion(layer, newPosX);
-                        Sprite explosionY = SpriteFactory.createExplosion(layer, newPosY);
-
-                        sprites.add(explosionX);
-                        sprites.add(explosionY);
-                    }**/
                     for(int t=0; t<bombList.get(i).spriteRange[0]+1; t++){
-                        Position newPosT = new Position(bombPos.x, bombPos.y-t);
-                        Sprite explosionT = SpriteFactory.createExplosion(layer, newPosT);
-                        sprites.add(explosionT);
+                        Position iterPosT = new Position(bombPos.x, bombPos.y-t);
+                        Decor decorPosT = game.getWorld().get(iterPosT);
+                        if(game.getWorld().isInside(iterPosT)) {
+                            if (game.getWorld().isEmpty(iterPosT) || decorPosT.isBreakable()) {
+                                Sprite explosionT = SpriteFactory.createExplosion(layer, iterPosT);
+                                sprites.add(explosionT);
+                            }
+                        }
                     }
 
                     for(int b=0; b<bombList.get(i).spriteRange[1]+1; b++){
-                        Position newPosB = new Position(bombPos.x, bombPos.y+b);
-                        Sprite explosionB = SpriteFactory.createExplosion(layer, newPosB);
-                        sprites.add(explosionB);
+                        Position iterPosB = new Position(bombPos.x, bombPos.y+b);
+                        Decor decorPosB = game.getWorld().get(iterPosB);
+                        if(game.getWorld().isInside(iterPosB)) {
+                            if (game.getWorld().isEmpty(iterPosB) || decorPosB.isBreakable()) {
+                                Sprite explosionB = SpriteFactory.createExplosion(layer, iterPosB);
+                                sprites.add(explosionB);
+                            }
+                        }
                     }
 
                     for(int l=0; l<bombList.get(i).spriteRange[2]+1; l++){
-                        Position newPosL = new Position(bombPos.x-l, bombPos.y);
-                        Sprite explosionL = SpriteFactory.createExplosion(layer, newPosL);
-                        sprites.add(explosionL);
+                        Position iterPosL = new Position(bombPos.x-l, bombPos.y);
+                        Decor decorPosL = game.getWorld().get(iterPosL);
+                        if(game.getWorld().isInside(iterPosL)) {
+                            if (game.getWorld().isEmpty(iterPosL) || decorPosL.isBreakable()) {
+                                Sprite explosionL = SpriteFactory.createExplosion(layer, iterPosL);
+                                sprites.add(explosionL);
+                            }
+                        }
+
                     }
 
                     for(int r=0; r<bombList.get(i).spriteRange[3]+1; r++){
-                        Position newPosR = new Position(bombPos.x+r, bombPos.y);
-                        Sprite explosionR = SpriteFactory.createExplosion(layer, newPosR);
-                        sprites.add(explosionR);
+                        Position iterPosR = new Position(bombPos.x+r, bombPos.y);
+                        Decor decorPosR = game.getWorld().get(iterPosR);
+                        if(game.getWorld().isInside(iterPosR)) {
+                            if (game.getWorld().isEmpty(iterPosR) || decorPosR.isBreakable()) {
+                                Sprite explosionR = SpriteFactory.createExplosion(layer, iterPosR);
+                                sprites.add(explosionR);
+                            }
+                        }
                     }
 
                 }
