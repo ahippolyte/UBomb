@@ -34,7 +34,6 @@ public class Bomb extends GameObject {
     }
 
     public void update(long now){
-        boolean firstTime = true;
         if(now-creationDate >= 1000000000L) {
             setBombStep(BombB);
         }
@@ -49,7 +48,7 @@ public class Bomb extends GameObject {
             Explode();
         }
         if(now-creationDate >= 4500000000L) {
-            destroyed[1] = true;
+            destroyed[1] = true; //bomb can be deleted from list and free from game
         }
     }
 
@@ -61,60 +60,36 @@ public class Bomb extends GameObject {
                 game.getPlayer().bombNumInc();
             }
 
-            //player and decor damages
+            //damage at bombPos
             Position bombPos = getPosition();
-            damageAtPos(bombPos);
+            damageDecorAtPos(bombPos);
 
-            //top
-            int i = 1;
-            Position topIterPos = new Position(bombPos.x, bombPos.y-i);
-            while(i<game.getPlayer().getRange() && game.getWorld().isEmpty(topIterPos)){
-                i++;
-                topIterPos = new Position(bombPos.x, bombPos.y-i);
-            }
-            damageAtPos(topIterPos);
-            spriteRange[0] = i;
+            //damage decor around and store ranges for sprites (used in GameEngine)
+            spriteRange[0] = destroyInDirection(Direction.N);
+            spriteRange[1] = destroyInDirection(Direction.S);
+            spriteRange[2] = destroyInDirection(Direction.W);
+            spriteRange[3] = destroyInDirection(Direction.E);
 
-            //bottom
-            int j = 1;
-            Position bottomIterPos = new Position(bombPos.x, bombPos.y+j);
-            while(j<game.getPlayer().getRange() && game.getWorld().isEmpty(bottomIterPos)){
-                j++;
-                bottomIterPos = new Position(bombPos.x, bombPos.y+j);
-            }
-            damageAtPos(bottomIterPos);
-            spriteRange[1] = j;
-
-            //left
-            int k = 1;
-            Position leftIterPos = new Position(bombPos.x-k, bombPos.y);
-            while(k<game.getPlayer().getRange() && game.getWorld().isEmpty(leftIterPos)){
-                k++;
-                leftIterPos = new Position(bombPos.x-k, bombPos.y);
-            }
-            damageAtPos(leftIterPos);
-            spriteRange[2] = k;
-
-            //right
-            int l = 1;
-            Position rightIterPos = new Position(bombPos.x+l, bombPos.y);
-            while(l<game.getPlayer().getRange() && game.getWorld().isEmpty(rightIterPos)){
-                l++;
-                rightIterPos = new Position(bombPos.x+l, bombPos.y);
-            }
-            damageAtPos(rightIterPos);
-            spriteRange[3] = l;
-
-            System.out.println("Portée haut : " + i);
-            System.out.println("Portée bas : " + j);
-            System.out.println("Portée gauche : " + k);
-            System.out.println("Portée droite : " + l);
-
-            destroyed[0] = true;
+            destroyed[0] = true; //bomb has exploded, ready to display corresponding sprites
         }
     }
 
-    public void damageAtPos(Position pos){
+    public int destroyInDirection(Direction dir){
+        Position bombPos = getPosition();
+        Position newPos = dir.nextPosition(bombPos);
+        int i=1;
+        while(i<game.getPlayer().getRange() && game.getWorld().isEmpty(newPos)){
+            i++;
+            if (game.getPlayer().getPosition().equals(newPos)) {
+                game.getPlayer().livesNumDec();
+            }
+            newPos = dir.nextPosition(newPos);
+        }
+        damageDecorAtPos(newPos);
+        return i;
+    }
+
+    public void damageDecorAtPos(Position pos){
         if(!game.getWorld().isEmpty(pos)){
             Decor decor = game.getWorld().get(pos);
             if(decor.isBreakable()){
