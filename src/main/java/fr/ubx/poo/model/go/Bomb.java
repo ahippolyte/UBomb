@@ -11,6 +11,7 @@ public class Bomb extends GameObject {
     private BombSteps step;
     private long creationDate;
     public boolean[] destroyed = new boolean[2];
+    public boolean explosionCreated = false;
     public int[] spriteRange = new int[4];
 
     public Bomb(Game game, Position position, long date){
@@ -25,26 +26,36 @@ public class Bomb extends GameObject {
         return "Bomb";
     }
 
+    //getters
     public BombSteps getBombStep() {
         return step;
     }
 
-    public void setBombStep(BombSteps step) {
-        this.step = step;
+    //setters
+    public void setBombStep(BombSteps newStep) {
+        step = newStep;
     }
 
     public void update(long now){
         if(now-creationDate >= 1000000000L) {
-            setBombStep(BombB);
+            if (step == BombA){
+                setBombStep(BombB);
+            }
         }
         if(now-creationDate >= 2000000000L) {
-            setBombStep(BombC);
+            if (step == BombB){
+                setBombStep(BombC);
+            }
         }
         if(now-creationDate >= 3000000000L) {
-            setBombStep(BombD);
+            if (step == BombC){
+                setBombStep(BombD);
+            }
         }
         if(now-creationDate >= 4000000000L) {
-            setBombStep(Explosion);
+            if (step == BombD){
+                setBombStep(Explosion);
+            }
             Explode();
         }
         if(now-creationDate >= 4500000000L) {
@@ -94,7 +105,6 @@ public class Bomb extends GameObject {
             Decor decor = game.getWorld().get(pos);
             if(decor.isBreakable()){
                 game.getWorld().clear(pos);
-                game.getWorld().setChange(true);
             }
         }
         if (game.getPlayer().getPosition().equals(pos)) {

@@ -13,6 +13,10 @@ public class SpriteDecor extends Sprite {
         this.position = position;
     }
 
+    public String toString(){
+        return "SpriteDecor";
+    }
+
     @Override
     public void updateImage() {
 

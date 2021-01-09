@@ -18,7 +18,7 @@ import javafx.scene.layout.Pane;
 
 public final class SpriteFactory {
 
-    public static Sprite createDecor(Pane layer, Position position, Decor decor) {
+    public static SpriteDecor createDecor(Pane layer, Position position, Decor decor) {
         ImageFactory factory = ImageFactory.getInstance();
         if (decor instanceof Stone)
             return new SpriteDecor(layer, factory.get(STONE), position);
@@ -49,23 +49,20 @@ public final class SpriteFactory {
         throw new RuntimeException("Unsupported sprite for decor " + decor);
     }
 
-    public static Sprite createPlayer(Pane layer, Player player) {
+    public static SpritePlayer createPlayer(Pane layer, Player player) {
         return new SpritePlayer(layer, player);
     }
 
-    /*public static Sprite createMonster(Pane layer, Monster monster) {
-        return new SpriteMonster(layer, monster);
-    }*/
 
-    public static Sprite createBomb(Pane layer, Bomb bomb){
+    public static SpriteBomb createBomb(Pane layer, Bomb bomb){
         return new SpriteBomb(layer, bomb);
     }
 
-    public static Sprite createExplosion(Pane layer, Position position){
+    public static SpriteExplosion createExplosion(Pane layer, Position position){
         return new SpriteExplosion(layer, position);
     }
 
-    public static Sprite createMonster(Pane layer, Monster monster){
+    public static SpriteMonster createMonster(Pane layer, Monster monster){
         return new SpriteMonster(layer, monster);
     }
 }

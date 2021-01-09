@@ -17,6 +17,9 @@ public class SpritePlayer extends SpriteGameObject {
         updateImage();
     }
 
+    public String toString(){
+        return "SpritePlayer";
+    }
 
     @Override
     public void updateImage() {

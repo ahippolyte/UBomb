@@ -9,8 +9,7 @@ import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
-import fr.ubx.poo.view.sprite.Sprite;
-import fr.ubx.poo.view.sprite.SpriteFactory;
+import fr.ubx.poo.view.sprite.*;
 import fr.ubx.poo.game.Game;
 import fr.ubx.poo.model.go.character.Player;
 import javafx.animation.AnimationTimer;
@@ -26,6 +25,8 @@ import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 public final class GameEngine {
@@ -34,8 +35,8 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
-    private List<Monster> monsterList = new ArrayList<>();
-    public List<Bomb> bombList = new ArrayList<>();
+    private List<Monster> monsterList = new LinkedList<>();
+    public List<Bomb> bombList = new LinkedList<>();
     private final List<Sprite> sprites = new ArrayList<>();
     private StatusBar statusBar;
     private Pane layer;
@@ -75,23 +76,20 @@ public final class GameEngine {
         statusBar = new StatusBar(root, sceneWidth, sceneHeight, game);
 
         //Create decor sprites
-        game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+        game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
 
         //Initialize monsters
-        for( Position monsterPos : game.getWorld().findMonsters() ) {
+        for (Position monsterPos : game.getWorld().findMonsters()) {
             monsterList.add(new Monster(game, monsterPos));
         }
 
         //Create monster sprites
-        for( Monster monster : monsterList ) {
+        for (Monster monster : monsterList) {
             sprites.add(SpriteFactory.createMonster(layer, monster));
         }
-
-
-        game.getWorld().setChange(false);
     }
-    
+
     protected final void buildAndSetGameLoop() {
         gameLoop = new AnimationTimer() {
             public void handle(long now) {
@@ -128,13 +126,13 @@ public final class GameEngine {
             player.requestMove(Direction.N);
         }
         if (input.isBomb()) {
-            if(player.getNumBomb() > 0) {
+            if (player.getNumBomb() > 0) {
                 Bomb bomb = new Bomb(game, player.getPosition(), now);
                 bombList.add(bomb);
+                sprites.add(SpriteFactory.createBomb(layer, bomb));
                 player.bombNumDec();
-            }
-            else {
-                System.out.println("Plus de bombe");
+            } else {
+                System.out.println("No more bombs...");
             }
         }
         input.clear();
@@ -157,51 +155,69 @@ public final class GameEngine {
                 processInput(now);
             }
         }.start();
-
     }
 
-    private void update(long now){
+    private void update(long now) {
         player.update(now);
+        /**
+         for( Monster monster : monsterList ) {
+         monster.update(now);
+         }**/
 
-        if(!bombList.isEmpty()) {
-            for (int i = 0; i < bombList.size(); i++) {
-                bombList.get(i).update(now);
-                if(bombList.get(i).destroyed[0]){
-                    //Explosion sprite at bomb pos
-                    Position bombPos = bombList.get(i).getPosition();
-                    Sprite explosionBomb = SpriteFactory.createExplosion(layer, bombPos);
-                    sprites.add(explosionBomb);
+        if (!bombList.isEmpty()) {
+            for (Bomb bomb : bombList) {
+                bomb.update(now);
 
-                    //Explosion sprites in each direction
-                    displayExplosionSprites(Direction.N, bombList.get(i));
-                    displayExplosionSprites(Direction.S, bombList.get(i));
-                    displayExplosionSprites(Direction.W, bombList.get(i));
-                    displayExplosionSprites(Direction.E, bombList.get(i));
+                if (bomb.destroyed[0] && !bomb.explosionCreated) {
+                    displayExplosionSprites(bomb);
+                    bomb.explosionCreated = true;
                 }
 
-                refreshBombSprites();
+                if (bomb.destroyed[1]) {
+                    game.getWorld().needDecorRefresh = true;
+                    bombList.remove(bomb);
 
-                if(bombList.get(i).destroyed[1]) {
-                    game.getWorld().setChange(true);
-                    bombList.remove(bombList.get(i));
+                    Iterator<Sprite> spriteIterator = sprites.iterator();
+                    while(spriteIterator.hasNext()) {
+                        Sprite s = spriteIterator.next();
+                        if (s instanceof SpriteBomb) {
+                            if(s.getGameObject() == bomb) {
+                                s.remove();
+                                spriteIterator.remove();
+                            }
+                        }
+                    }
                 }
             }
         }
 
-        if(game.getWorld().hasChanged()){
-            System.out.println("Rafraichissement des sprites de décor");
-            refreshWorldSprites();
-            game.getWorld().setChange(false);
+        for(Monster monster: monsterList){
+            if(player.getPosition() == monster.getPosition()){
+                player.livesNumDec();
+            }
         }
 
-        if (player.isAlive() == false) {
+        if (game.getWorld().needDecorRefresh) {
+            System.out.println("Rafraichissement des sprites de décor");
+            refreshDecorSprites();
+        }
+
+        if (!player.isAlive()) {
             gameLoop.stop();
-            showMessage("Perdu!", Color.RED);
+            showMessage("YOU LOOSE!", Color.RED);
         }
         if (player.isWinner()) {
             gameLoop.stop();
-            showMessage("Gagné!", Color.BLUE);
+            showMessage("YOU WIN!", Color.BLUE);
         }
+    }
+
+
+    public void displayExplosionSprites(Bomb bomb) {
+        displayExplosionSprites(Direction.N, bomb);
+        displayExplosionSprites(Direction.S, bomb);
+        displayExplosionSprites(Direction.W, bomb);
+        displayExplosionSprites(Direction.E, bomb);
     }
 
     public void displayExplosionSprites(Direction dir, Bomb bomb){
@@ -244,22 +260,33 @@ public final class GameEngine {
         gameLoop.start();
     }
 
-    private void refreshWorldSprites(){
-        sprites.forEach(Sprite::remove);
-        sprites.clear();
-        game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
-        game.getWorld().setChange(false);
-        refreshBombSprites();
-    }
+    private void refreshDecorSprites(){ //Re-display every decor sprites (stones, trees, boxes and bonus)
+        game.getWorld().needDecorRefresh = false;
 
-    private void refreshBombSprites(){
-        if(!bombList.isEmpty()){
-            for(int i=0; i<bombList.size(); i++){
-                int finalI = i;
-                sprites.remove(bombList.get(finalI));
-                sprites.add(SpriteFactory.createBomb(layer, bombList.get(finalI)));
+        Iterator<Sprite> spriteIterator = sprites.iterator();
+        while(spriteIterator.hasNext()) {
+            Sprite s = spriteIterator.next();
+            if (s instanceof SpriteDecor) {
+                s.remove();
+                spriteIterator.remove();
             }
         }
-        //game.bombSpriteSetChanged(false);
+        game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
     }
+
+    /**private void refreshMonsterSprites(){ //Re-display monsters (after each modification)
+        for(Monster monster: monsterList){
+            monster
+        }
+    }**/
+
+    /**private void refreshAllSprites(){
+     game.getWorld().needDecorRefresh = false;
+     sprites.forEach(Sprite::remove);
+     sprites.clear();
+     game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
+     refreshBombSprites();
+     }**/
 }
+
+

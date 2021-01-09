@@ -81,14 +81,14 @@ public class Player extends GameObject implements Movable {
                 setPosition(nextPos);
                 game.getWorld().clear(nextPos);
                 game.getWorld().set(nextNextPos, nextDecor);
-                game.getWorld().setChange(true);
+                game.getWorld().needDecorRefresh = true;
             }
         }
         else {
             setPosition(nextPos);
             game.getWorld().clear(nextPos);
-            game.getWorld().setChange(true);
             nextDecor.plyGetBonus(game.getPlayer());
+            game.getWorld().needDecorRefresh = true;
         }
     }
 

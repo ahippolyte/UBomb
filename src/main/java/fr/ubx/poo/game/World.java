@@ -18,21 +18,14 @@ public class World {
     private final Map<Position, Decor> grid;
     private final WorldEntity[][] raw;
     public final Dimension dimension;
-    private boolean needRefresh = true;
+    public boolean needDecorRefresh = false;
+    //private boolean needRefresh = false;
 
 
     public World(WorldEntity[][] raw) {
         this.raw = raw;
         dimension = new Dimension(raw.length, raw[0].length);
         grid = WorldBuilder.build(raw, dimension);
-    }
-
-    public boolean hasChanged(){
-        return needRefresh;
-    }
-
-    public void setChange(boolean bool){
-        needRefresh = bool;
     }
 
     public Position findPlayer() throws PositionNotFoundException {

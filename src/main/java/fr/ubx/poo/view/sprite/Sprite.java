@@ -5,6 +5,7 @@
 package fr.ubx.poo.view.sprite;
 
 import fr.ubx.poo.game.Position;
+import fr.ubx.poo.model.go.GameObject;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -21,6 +22,10 @@ public abstract class Sprite {
         this.image = image;
     }
 
+    public String toString(){
+        return "Sprite";
+    }
+
     public final void setImage(Image image) {
         if (this.image == null || this.image != image) {
             this.image = image;
@@ -30,6 +35,10 @@ public abstract class Sprite {
     public abstract void updateImage();
 
     public abstract Position getPosition();
+
+    public GameObject getGameObject(){
+        return null;
+    }
 
     public final void render() {
         if (imageView != null) {
