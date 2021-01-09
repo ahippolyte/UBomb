@@ -9,7 +9,7 @@ import fr.ubx.poo.model.go.GameObject;
 public class Monster extends GameObject implements Movable {
     private boolean alive = true;
     Direction direction;
-    private boolean moveRequested = false;
+    public boolean moveRequested = false;
 
     public Monster(Game game, Position position) {
         super(game, position);

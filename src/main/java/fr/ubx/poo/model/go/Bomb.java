@@ -105,6 +105,7 @@ public class Bomb extends GameObject {
             Decor decor = game.getWorld().get(pos);
             if(decor.isBreakable()){
                 game.getWorld().clear(pos);
+                game.getWorld().needDecorRefresh = true;
             }
         }
         if (game.getPlayer().getPosition().equals(pos)) {

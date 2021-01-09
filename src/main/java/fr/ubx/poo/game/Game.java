@@ -30,7 +30,7 @@ public class Game {
         Position positionPlayer = null;
         initPlayerLives = 3;
         initPlayerKey = 0;
-        initPlayerBomb = 1;
+        initPlayerBomb = 5;
         initPlayerRange = 1;
         try {
             positionPlayer = world.findPlayer();

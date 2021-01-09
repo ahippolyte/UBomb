@@ -159,13 +159,17 @@ public final class GameEngine {
 
     private void update(long now) {
         player.update(now);
-        /**
-         for( Monster monster : monsterList ) {
-         monster.update(now);
-         }**/
+
+        for( Monster monster : monsterList ) {
+            if(monster.moveRequested) {
+                monster.update(now);
+            }
+        }
 
         if (!bombList.isEmpty()) {
-            for (Bomb bomb : bombList) {
+            Iterator<Bomb> bombIterator = bombList.iterator();
+            while(bombIterator.hasNext()) {
+                Bomb bomb = bombIterator.next();
                 bomb.update(now);
 
                 if (bomb.destroyed[0] && !bomb.explosionCreated) {
@@ -175,18 +179,19 @@ public final class GameEngine {
 
                 if (bomb.destroyed[1]) {
                     game.getWorld().needDecorRefresh = true;
-                    bombList.remove(bomb);
 
                     Iterator<Sprite> spriteIterator = sprites.iterator();
                     while(spriteIterator.hasNext()) {
                         Sprite s = spriteIterator.next();
-                        if (s instanceof SpriteBomb) {
+                        if (s instanceof SpriteBomb || s instanceof SpriteExplosion) {
                             if(s.getGameObject() == bomb) {
                                 s.remove();
                                 spriteIterator.remove();
                             }
                         }
                     }
+
+                    bombIterator.remove();
                 }
             }
         }
@@ -241,7 +246,7 @@ public final class GameEngine {
             if(game.getWorld().isInside(nextPos)) {
                 Decor nextDecor = game.getWorld().get(nextPos);
                 if (game.getWorld().isEmpty(nextPos) || nextDecor.isBreakable()) {
-                    Sprite explosion = SpriteFactory.createExplosion(layer, nextPos);
+                    Sprite explosion = SpriteFactory.createExplosion(layer, nextPos, bomb);
                     sprites.add(explosion);
                 }
                 nextPos = dir.nextPosition(nextPos);
@@ -266,7 +271,7 @@ public final class GameEngine {
         Iterator<Sprite> spriteIterator = sprites.iterator();
         while(spriteIterator.hasNext()) {
             Sprite s = spriteIterator.next();
-            if (s instanceof SpriteDecor) {
+            if (s.toString() == "SpriteDecor") {
                 s.remove();
                 spriteIterator.remove();
             }
