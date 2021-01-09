@@ -47,8 +47,8 @@ public class WorldBuilder {
                 return new BombRangeDec();
             case Key:
                 return new Key();
-            case DoorNextClosed:
-                return new Door_closed();
+            case Door:
+                return new Door();
             default:
                 return null;
         }

@@ -9,6 +9,7 @@ import static fr.ubx.poo.view.image.ImageResource.*;
 
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.decor.*;
+import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.*;
 import fr.ubx.poo.view.image.ImageFactory;
@@ -40,10 +41,10 @@ public final class SpriteFactory {
             return new SpriteDecor(layer, factory.get(BombRangeDec), position);
         if (decor instanceof Key)
             return new SpriteDecor(layer, factory.get(Key), position);
-        if (decor instanceof Door_closed)
+        if (decor instanceof Door)
             return new SpriteDecor(layer, factory.get(Door_closed), position);
-        if (decor instanceof Door_opened)
-            return new SpriteDecor(layer, factory.get(Door_opened), position);
+        //if (decor instanceof Door_opened)
+        //    return new SpriteDecor(layer, factory.get(Door_opened), position);
 
 
         throw new RuntimeException("Unsupported sprite for decor " + decor);
