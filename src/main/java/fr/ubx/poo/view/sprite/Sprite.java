@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
+import java.awt.*;
+
 public abstract class Sprite {
 
     public static final int size = 40;
@@ -22,10 +24,6 @@ public abstract class Sprite {
         this.image = image;
     }
 
-    public String toString(){
-        return "Sprite";
-    }
-
     public final void setImage(Image image) {
         if (this.image == null || this.image != image) {
             this.image = image;
@@ -36,10 +34,6 @@ public abstract class Sprite {
 
     public abstract Position getPosition();
 
-    public GameObject getGameObject(){
-        return null;
-    }
-
     public final void render() {
         if (imageView != null) {
             remove();
@@ -49,6 +43,7 @@ public abstract class Sprite {
         imageView.setX(getPosition().x * size);
         imageView.setY(getPosition().y * size);
         layer.getChildren().add(imageView);
+
     }
 
     public final void remove() {
@@ -56,4 +51,7 @@ public abstract class Sprite {
         imageView = null;
     }
 
+    public GameObject getGameObject(){
+        return null;
+    }
 }

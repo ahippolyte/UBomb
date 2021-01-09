@@ -31,4 +31,11 @@ public abstract class GameObject extends Entity {
         return game;
     }
 
+    public boolean equals(GameObject go){
+        if(go == this){
+            return true;
+        }
+        return false;
+    }
+
 }

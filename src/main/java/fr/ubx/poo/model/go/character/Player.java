@@ -18,6 +18,10 @@ public class Player extends GameObject implements Movable {
     private int bomb;
     private int range;
     private boolean winner;
+    private boolean god = false;
+    private boolean godEnd = true;
+    public long delay;
+
 
     public Player(Game game, Position position) {
         super(game, position);
@@ -36,17 +40,28 @@ public class Player extends GameObject implements Movable {
     public boolean isWinner() { return winner; }
     public boolean isAlive() { return alive; }
     public Direction getDirection() { return direction; }
+    public boolean isGod(){
+        return god;
+    }
 
     //setters:
     public void bombNumInc() { bomb++; }
     public void bombNumDec() { bomb--; }
     public void livesNumInc() { lives++; }
-    public void livesNumDec() { lives--; }
+    public void livesNumDec() {
+        if(!god) {
+            lives--;
+            god = true;
+        }
+    }
     public void bombRangeInc() { range++; }
     public void bombRangeDec() { range--; }
     public void keyNumInc(){ key++; }
     public void setWinner(){ winner = true; }
     public void setAlive(boolean bool) {alive = bool;}
+    public void setGod(boolean bool){
+        god = bool;
+    }
 
     //methods:
     public void requestMove(Direction direction) {
@@ -77,7 +92,7 @@ public class Player extends GameObject implements Movable {
         }
         else if (nextDecor.toString() == "Box") {
             Position nextNextPos = direction.nextPosition(nextPos);
-            if (game.getWorld().isEmpty(nextNextPos) & nextNextPos.inside(game.getWorld().dimension)) {
+            if (game.getWorld().isEmpty(nextNextPos) & nextNextPos.inside(game.getWorld().dimension) & !game.monsterAtPos(nextNextPos)) {
                 setPosition(nextPos);
                 game.getWorld().clear(nextPos);
                 game.getWorld().set(nextNextPos, nextDecor);
@@ -89,6 +104,12 @@ public class Player extends GameObject implements Movable {
             game.getWorld().clear(nextPos);
             nextDecor.plyGetBonus(game.getPlayer());
             game.getWorld().needDecorRefresh = true;
+        }
+
+        for(Monster monster: game.getMonsterList()){
+            if(getPosition().equals(monster.getPosition())){
+                livesNumDec();
+            }
         }
     }
 
@@ -102,6 +123,23 @@ public class Player extends GameObject implements Movable {
 
         if(getLives() <= 0){
             setAlive(false);
+        }
+
+        GodMode(now);
+    }
+
+    public void GodMode(long now){
+        if(god){
+            if (god && godEnd) {
+                System.out.println("God for 2 seconds");
+                delay = now;
+                godEnd = false;
+            }
+            if (now - delay >= 2000000000L) {
+                god = false;
+                godEnd = true;
+                System.out.println("Not god anymore");
+            }
         }
     }
 

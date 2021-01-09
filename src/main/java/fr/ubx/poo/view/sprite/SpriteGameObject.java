@@ -17,4 +17,9 @@ public abstract class SpriteGameObject extends Sprite {
     public Position getPosition() {
         return go.getPosition();
     }
+
+
+    public GameObject getGameObject(){
+        return go;
+    }
 }

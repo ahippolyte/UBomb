@@ -7,17 +7,25 @@ import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.go.GameObject;
 
 public class Monster extends GameObject implements Movable {
-    private boolean alive = true;
+    private boolean alive;
     Direction direction;
     public boolean moveRequested = false;
 
     public Monster(Game game, Position position) {
         super(game, position);
         this.direction = Direction.random();
+        alive = true;
+    }
+
+    public String toString(){
+        return "Monster "+getPosition()+"";
     }
 
     //getters
     public Direction getDirection() { return direction; }
+    public boolean isAlive(){
+        return alive;
+    }
 
     //setters
 
@@ -26,6 +34,9 @@ public class Monster extends GameObject implements Movable {
     }
 
     public void doMove(Direction direction) {
+    }
+    public void setAlive(boolean bool){
+        alive = bool;
     }
 
     public void update(long now) {

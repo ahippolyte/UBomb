@@ -6,12 +6,10 @@ package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.Bomb;
+import fr.ubx.poo.model.go.GameObject;
 import fr.ubx.poo.model.go.character.Monster;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 
 public class World {
@@ -19,8 +17,6 @@ public class World {
     private final WorldEntity[][] raw;
     public final Dimension dimension;
     public boolean needDecorRefresh = false;
-    //private boolean needRefresh = false;
-
 
     public World(WorldEntity[][] raw) {
         this.raw = raw;
@@ -39,12 +35,12 @@ public class World {
         throw new PositionNotFoundException("Player");
     }
 
-    public List<Position> findMonsters() {
-        List<Position> monsterPositions = new ArrayList<>();
+    public List<Position> findMonsters(){
+        List<Position> monsterPositions = new LinkedList<>();
         for (int x = 0; x < dimension.width; x++) {
             for (int y = 0; y < dimension.height; y++) {
                 if (raw[y][x] == WorldEntity.Monster) {
-                    monsterPositions.add(new Position(x, y));
+                    monsterPositions.add(new Position(x,y));
                 }
             }
         }
@@ -53,6 +49,13 @@ public class World {
 
     public Decor get(Position position) {
         return grid.get(position);
+    }
+
+    public boolean bombAtPos(Position position){
+        if(raw[position.x][position.y] == WorldEntity.Bomb){
+            return true;
+        }
+        return false;
     }
 
     public void set(Position position, Decor decor) {

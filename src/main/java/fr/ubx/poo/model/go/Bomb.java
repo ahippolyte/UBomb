@@ -4,6 +4,7 @@ import fr.ubx.poo.game.*;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.Game;
 import fr.ubx.poo.model.decor.Decor;
+import fr.ubx.poo.model.go.character.Monster;
 
 import static fr.ubx.poo.game.BombSteps.*;
 
@@ -74,6 +75,7 @@ public class Bomb extends GameObject {
             //damage at bombPos
             Position bombPos = getPosition();
             damageDecorAtPos(bombPos);
+            damageMonsterAtPos(bombPos);
 
             //damage decor around and store ranges for sprites (used in GameEngine)
             spriteRange[0] = destroyInDirection(Direction.N);
@@ -88,14 +90,18 @@ public class Bomb extends GameObject {
     public int destroyInDirection(Direction dir){
         Position bombPos = getPosition();
         Position newPos = dir.nextPosition(bombPos);
+        damageMonsterAtPos(newPos);
         int i=1;
         while(i<game.getPlayer().getRange() && game.getWorld().isEmpty(newPos)){
             i++;
             if (game.getPlayer().getPosition().equals(newPos)) {
                 game.getPlayer().livesNumDec();
             }
+
+            damageMonsterAtPos(newPos);
             newPos = dir.nextPosition(newPos);
         }
+        damageMonsterAtPos(newPos);
         damageDecorAtPos(newPos);
         return i;
     }
@@ -110,6 +116,17 @@ public class Bomb extends GameObject {
         }
         if (game.getPlayer().getPosition().equals(pos)) {
             game.getPlayer().livesNumDec();
+        }
+
+    }
+
+    public void damageMonsterAtPos(Position pos){
+        for(Monster monster: game.getMonsterList()){
+            if(monster.getPosition().equals(pos)){
+                System.out.println(monster.isAlive());
+                monster.setAlive(false);
+                System.out.println(monster.isAlive());
+            }
         }
     }
 

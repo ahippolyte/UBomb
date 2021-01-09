@@ -49,6 +49,7 @@ public final class GameEngine {
         this.windowTitle = windowTitle;
         this.game = game;
         this.player = game.getPlayer();
+        this.monsterList = game.getMonsterList();
 
         initialize(stage, game);
         buildAndSetGameLoop();
@@ -78,11 +79,6 @@ public final class GameEngine {
         //Create decor sprites
         game.getWorld().forEach((pos, d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
         spritePlayer = SpriteFactory.createPlayer(layer, player);
-
-        //Initialize monsters
-        for (Position monsterPos : game.getWorld().findMonsters()) {
-            monsterList.add(new Monster(game, monsterPos));
-        }
 
         //Create monster sprites
         for (Monster monster : monsterList) {
@@ -160,11 +156,11 @@ public final class GameEngine {
     private void update(long now) {
         player.update(now);
 
-        for( Monster monster : monsterList ) {
+        /**for( Monster monster : monsterList ) {
             if(monster.moveRequested) {
                 monster.update(now);
             }
-        }
+        }**/
 
         if (!bombList.isEmpty()) {
             Iterator<Bomb> bombIterator = bombList.iterator();
@@ -196,21 +192,39 @@ public final class GameEngine {
             }
         }
 
-        for(Monster monster: monsterList){
-            if(player.getPosition() == monster.getPosition()){
-                player.livesNumDec();
-            }
+        if (game.getWorld().needDecorRefresh) {
+            System.out.println("Updating sprites...");
+            refreshDecorSprites();
         }
 
-        if (game.getWorld().needDecorRefresh) {
-            System.out.println("Rafraichissement des sprites de décor");
-            refreshDecorSprites();
+        Iterator<Monster> monsterIterator = monsterList.iterator();
+        while(monsterIterator.hasNext()) {
+            Monster monster = monsterIterator.next();
+            if(!monster.isAlive()){
+                System.out.println("Monster dead");
+                Iterator<Sprite> spriteIterator = sprites.iterator();
+                while(spriteIterator.hasNext()) {
+                    Sprite sprite = spriteIterator.next();
+                    if (sprite instanceof SpriteMonster) {
+                        if(sprite.getGameObject() == monster) {
+                            sprite.remove();
+                            spriteIterator.remove();
+                        }
+                    }
+                }
+                monsterIterator.remove();
+            }
         }
 
         if (!player.isAlive()) {
             gameLoop.stop();
             showMessage("YOU LOOSE!", Color.RED);
         }
+
+        if(player.isGod()){
+            //spritePlayer.changeColor();
+        }
+
         if (player.isWinner()) {
             gameLoop.stop();
             showMessage("YOU WIN!", Color.BLUE);
@@ -263,6 +277,17 @@ public final class GameEngine {
 
     public void start() {
         gameLoop.start();
+    }
+
+    public void removeSpritesOfAKind(String kind){
+        Iterator<Sprite> spriteIterator = sprites.iterator();
+        while(spriteIterator.hasNext()) {
+            Sprite s = spriteIterator.next();
+            if (s.toString() == kind) {
+                s.remove();
+                spriteIterator.remove();
+            }
+        }
     }
 
     private void refreshDecorSprites(){ //Re-display every decor sprites (stones, trees, boxes and bonus)
