@@ -130,7 +130,7 @@ public class Player extends GameObject implements Movable {
 
     public void GodMode(long now){
         if(god){
-            if (god && godEnd) {
+            if (godEnd) {
                 System.out.println("God for 2 seconds");
                 delay = now;
                 godEnd = false;

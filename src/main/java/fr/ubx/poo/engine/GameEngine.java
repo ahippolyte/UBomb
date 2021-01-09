@@ -156,11 +156,9 @@ public final class GameEngine {
     private void update(long now) {
         player.update(now);
 
-        /**for( Monster monster : monsterList ) {
-            if(monster.moveRequested) {
-                monster.update(now);
-            }
-        }**/
+        for( Monster monster : monsterList ) {
+            monster.update(now);
+        }
 
         if (!bombList.isEmpty()) {
             Iterator<Bomb> bombIterator = bombList.iterator();
