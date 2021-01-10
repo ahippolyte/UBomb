@@ -32,7 +32,7 @@ public class Game {
         this.worldPath = worldPath;
         loadConfig(worldPath);
         world = new WorldStatic();
-        loadLevel(worldPath, 2);
+        //loadLevel(worldPath, 2);
         Position positionPlayer = null;
         try {
             positionPlayer = world.findPlayer();
