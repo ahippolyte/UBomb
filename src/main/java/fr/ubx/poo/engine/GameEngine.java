@@ -35,7 +35,7 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
-    private List<Monster> monsterList;
+    private final List<Monster> monsterList;
     public List<Bomb> bombList = new LinkedList<>();
     private final List<Sprite> sprites = new ArrayList<>();
     private StatusBar statusBar;
@@ -43,7 +43,6 @@ public final class GameEngine {
     private Input input;
     private Stage stage;
     private Sprite spritePlayer;
-    private boolean explosionCreated = false;
     private boolean color = true;
     private boolean color2 = false;
     private boolean color3 = false;
@@ -203,13 +202,6 @@ public final class GameEngine {
             showMessage("YOU LOOSE!", Color.RED);
         }
 
-        /**if(player.isGod()){
-            spritePlayer.changeColor(true);
-        }
-        else{
-            spritePlayer.changeColor(false);
-        }**/
-
         if(player.isGod()) {
             if (color) {
                 if (color2) {
@@ -340,17 +332,6 @@ public final class GameEngine {
         gameLoop.start();
     }
 
-    public void removeSpritesOfAKind(String kind){
-        Iterator<Sprite> spriteIterator = sprites.iterator();
-        while(spriteIterator.hasNext()) {
-            Sprite s = spriteIterator.next();
-            if (s.toString() == kind) {
-                s.remove();
-                spriteIterator.remove();
-            }
-        }
-    }
-
     private void refreshDecorSprites(){ //Re-display every decor sprites (stones, trees, boxes and bonus)
         game.getWorld().needDecorRefresh = false;
 
@@ -365,19 +346,6 @@ public final class GameEngine {
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
     }
 
-    /**private void refreshMonsterSprites(){ //Re-display monsters (after each modification)
-        for(Monster monster: monsterList){
-            monster
-        }
-    }**/
-
-    /**private void refreshAllSprites(){
-     game.getWorld().needDecorRefresh = false;
-     sprites.forEach(Sprite::remove);
-     sprites.clear();
-     game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
-     refreshBombSprites();
-     }**/
 }
 
 
