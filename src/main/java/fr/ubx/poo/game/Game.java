@@ -5,10 +5,7 @@
 package fr.ubx.poo.game;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
@@ -28,11 +25,14 @@ public class Game {
     public int initPlayerKey;
     public int initPlayerBomb;
     public int initPlayerRange;
+    public String prefix;
+    public int numLevels;
 
     public Game(String worldPath) {
-        world = new WorldStatic();
         this.worldPath = worldPath;
         loadConfig(worldPath);
+        world = new WorldStatic();
+        loadLevel(worldPath, 2);
         Position positionPlayer = null;
         try {
             positionPlayer = world.findPlayer();
@@ -50,22 +50,32 @@ public class Game {
     public int getInitPlayerLives() {
         return initPlayerLives;
     }
+
     public int getInitPlayerKey() {
         return initPlayerKey;
     }
-    public int getInitPlayerBomb() { return initPlayerBomb; }
-    public int getInitPlayerRange() { return initPlayerRange; }
+
+    public int getInitPlayerBomb() {
+        return initPlayerBomb;
+    }
+
+    public int getInitPlayerRange() {
+        return initPlayerRange;
+    }
 
     public World getWorld() {
         return world;
     }
+
     public Player getPlayer() {
         return this.player;
     }
-    public List<Monster> getMonsterList(){
+
+    public List<Monster> getMonsterList() {
         return monsterList;
     }
-    public List<Bomb> getBombList(){
+
+    public List<Bomb> getBombList() {
         return bombList;
     }
 
@@ -79,18 +89,94 @@ public class Game {
             initPlayerKey = Integer.parseInt(prop.getProperty("key", "0"));
             initPlayerBomb = Integer.parseInt(prop.getProperty("bomb", "1"));
             initPlayerRange = Integer.parseInt(prop.getProperty("range", "1"));
+            prefix = prop.getProperty("prefix", "level");
+            numLevels = Integer.parseInt(prop.getProperty("levels", "3"));
         } catch (IOException ex) {
             System.err.println("Error loading configuration");
         }
     }
 
-    /**private void loadWorld(String path, int level) {
-        try (InputStream input = new FileInputStream(new File(path, level))) {
+    private int[] getLevelDimension(String path, int N) {
 
-        } catch (IOExceptomion ex) {
-            System.err.println("Error loading configuration");
+        int[] dimensions = new int[2];
+
+        String fileName = prefix+N+".txt";
+
+        try {
+            InputStream input = new FileInputStream(new File(path, fileName));
+
+            int width = -1;
+            while ((input.read()) != '\n') {
+                width++;
+            }
+            int totalNbChar = 0;
+            while ((input.read()) != -1) {
+                totalNbChar++;
+            }
+
+            int height = totalNbChar/width+1;
+
+            dimensions[0] = width;
+            dimensions[1] = height;
         }
-    }**/
+        catch (FileNotFoundException ex) {
+            System.err.println("File not found");
+        }
+        catch (IOException e) {
+            System.err.println("Error loading level");
+        }
+
+        return dimensions;
+    }
+
+    private void loadLevel(String path, int N) {
+
+        int[] dimensions = getLevelDimension(path, N);
+
+        String fileName = prefix+N+".txt";
+
+        try {
+            InputStream input = new FileInputStream(new File(path, fileName));
+
+            WorldEntity[][] level = new WorldEntity[dimensions[0]][dimensions[1]];
+
+            BufferedReader br = new BufferedReader(new FileReader(new File(path, fileName)));
+
+            try {
+                int y = 0;
+                String line;
+                while ((line = br.readLine()) != null) {
+                    for (int x = 0; x < dimensions[0]; x++) {
+                        int content = input.read();
+                        char c = (char) content;
+                        if (WorldEntity.fromCode(c).isPresent()) {
+                            level[x][y] = WorldEntity.fromCode(c).get();
+                        }
+                        else{
+                            level[x][y] = WorldEntity.Empty;
+                        }
+                    }
+                    y++;
+                }
+            } finally {
+                br.close();
+            }
+
+            //display tab
+            for(int y=0; y<dimensions[1]; y++){
+                for(int x=0; x<dimensions[0]; x++){
+                    System.out.print(level[x][y]);
+                }
+                System.out.println();
+            }
+        }
+        catch (FileNotFoundException ex) {
+            System.err.println("File not found");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public boolean monsterAtPos(Position position){
         for(Monster monster: monsterList){
@@ -100,15 +186,5 @@ public class Game {
         }
         return false;
     }
-
-    public boolean bombAtPos(Position position){
-        for(Bomb bomb: bombList){
-            if(bomb.getPosition().equals(position)){
-                return true;
-            }
-        }
-        return false;
-    }
-
 
 }

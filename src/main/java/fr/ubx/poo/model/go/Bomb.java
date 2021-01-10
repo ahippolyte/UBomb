@@ -109,28 +109,6 @@ public class Bomb extends GameObject {
         return i;
     }
 
-    /**public int destroyInDirection(Direction dir){
-        Position bombPos = getPosition();
-        Position newPos = dir.nextPosition(bombPos);
-        damageMonsterAtPos(newPos);
-        damageBombAtPos(newPos);
-        int i=1;
-        while(i<game.getPlayer().getRange() && game.getWorld().isEmpty(newPos)){
-            i++;
-            if (game.getPlayer().getPosition().equals(newPos)) {
-                game.getPlayer().livesNumDec();
-            }
-
-            damageMonsterAtPos(newPos);
-            damageBombAtPos(newPos);
-            newPos = dir.nextPosition(newPos);
-        }
-        damageMonsterAtPos(newPos);
-        damageDecorAtPos(newPos);
-        damageBombAtPos(newPos);
-        return i;
-    }**/
-
     public void damageDecorAtPos(Position pos){
         if(!game.getWorld().isEmpty(pos)){
             Decor decor = game.getWorld().get(pos);

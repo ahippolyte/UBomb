@@ -203,13 +203,6 @@ public final class GameEngine {
             showMessage("YOU LOOSE!", Color.RED);
         }
 
-        /**if(player.isGod()){
-            spritePlayer.changeColor(true);
-        }
-        else{
-            spritePlayer.changeColor(false);
-        }**/
-
         if(player.isGod()) {
             if (color) {
                 if (color2) {
@@ -364,20 +357,6 @@ public final class GameEngine {
         }
         game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
     }
-
-    /**private void refreshMonsterSprites(){ //Re-display monsters (after each modification)
-        for(Monster monster: monsterList){
-            monster
-        }
-    }**/
-
-    /**private void refreshAllSprites(){
-     game.getWorld().needDecorRefresh = false;
-     sprites.forEach(Sprite::remove);
-     sprites.clear();
-     game.getWorld().forEach( (pos,d) -> sprites.add(SpriteFactory.createDecor(layer, pos, d)));
-     refreshBombSprites();
-     }**/
 }
 
 

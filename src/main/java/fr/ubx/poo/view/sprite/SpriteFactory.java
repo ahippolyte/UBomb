@@ -4,7 +4,6 @@
 
 package fr.ubx.poo.view.sprite;
 
-//import static fr.ubx.poo.game.WorldEntity.BombNumberInc;
 import static fr.ubx.poo.view.image.ImageResource.*;
 
 import fr.ubx.poo.game.Position;
@@ -13,7 +12,6 @@ import fr.ubx.poo.model.decor.Door;
 import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.*;
 import fr.ubx.poo.view.image.ImageFactory;
-import javafx.geometry.Pos;
 import javafx.scene.layout.Pane;
 
 

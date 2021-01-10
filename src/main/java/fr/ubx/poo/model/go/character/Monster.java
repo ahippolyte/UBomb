@@ -5,7 +5,6 @@ import fr.ubx.poo.game.Game;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.Movable;
 import fr.ubx.poo.model.decor.Bonus;
-import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.GameObject;
 
 public class Monster extends GameObject implements Movable {

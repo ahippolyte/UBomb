@@ -10,8 +10,6 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 
-import java.awt.*;
-
 public class SpritePlayer extends SpriteGameObject {
     private final ColorAdjust effect = new ColorAdjust();
 

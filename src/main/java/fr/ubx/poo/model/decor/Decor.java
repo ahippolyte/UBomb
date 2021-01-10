@@ -4,8 +4,6 @@
 
 package fr.ubx.poo.model.decor;
 
-import fr.ubx.poo.game.Direction;
-import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.Entity;
 import fr.ubx.poo.model.go.character.Player;
 

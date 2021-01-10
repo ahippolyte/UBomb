@@ -5,9 +5,6 @@
 package fr.ubx.poo.game;
 
 import fr.ubx.poo.model.decor.Decor;
-import fr.ubx.poo.model.go.Bomb;
-import fr.ubx.poo.model.go.GameObject;
-import fr.ubx.poo.model.go.character.Monster;
 
 import java.util.*;
 import java.util.function.BiConsumer;
