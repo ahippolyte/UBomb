@@ -4,6 +4,7 @@ import fr.ubx.poo.game.Direction;
 import fr.ubx.poo.game.Game;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.model.Movable;
+import fr.ubx.poo.model.decor.Bonus;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.GameObject;
 
@@ -35,7 +36,7 @@ public class Monster extends GameObject implements Movable {
         Position nextPos = direction.nextPosition(getPosition());
 
         if (nextPos.inside(game.getWorld().dimension)) {
-            if (game.getWorld().isEmpty(nextPos) & !game.monsterAtPos(nextPos)) {
+            if ((game.getWorld().isEmpty(nextPos) || game.getWorld().get(nextPos) instanceof Bonus) & !game.monsterAtPos(nextPos)) {
                 return true;
             }
             return false;

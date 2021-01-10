@@ -2,20 +2,11 @@ package fr.ubx.poo.model.decor;
 
 import fr.ubx.poo.model.go.character.Player;
 
-public class BombRangeInc extends Decor {
+public class BombRangeInc extends Bonus {
 
     public String toString(){ return "BombRangeInc"; }
-
-    public boolean plyCanMoveOn() {
-        return true;
-    }
 
     public void plyGetBonus(Player ply){
         ply.bombRangeInc();
     }
-
-    public boolean isBreakable(){
-        return true;
-    }
-
 }

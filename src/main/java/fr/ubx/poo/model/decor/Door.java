@@ -12,16 +12,15 @@ public class Door extends Decor{
         return false;
     }
 
+    public String toString() {
+        return "Door";
+    }
 
     public boolean plyCanMoveOn() {
         if (!opened){
             return false;
         }
         return true;
-    }
-
-    public String toString(){
-        return "Door";
     }
 }
 

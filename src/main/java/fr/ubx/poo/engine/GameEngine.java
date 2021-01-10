@@ -241,7 +241,7 @@ public final class GameEngine {
         while(i<bomb.spriteRange[j]+1){
             if(game.getWorld().isInside(nextPos)) {
                 Decor nextDecor = game.getWorld().get(nextPos);
-                if (game.getWorld().isEmpty(nextPos) || nextDecor.isBreakable()) {
+                if (game.getWorld().isEmpty(nextPos) || nextDecor instanceof Bonus) {
                     Sprite explosion = SpriteFactory.createExplosion(layer, nextPos, bomb);
                     sprites.add(explosion);
                 }

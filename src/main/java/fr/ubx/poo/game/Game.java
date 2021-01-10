@@ -34,10 +34,6 @@ public class Game {
         this.worldPath = worldPath;
         loadConfig(worldPath);
         Position positionPlayer = null;
-        initPlayerLives = 3;
-        initPlayerKey = 0;
-        initPlayerBomb = 5;
-        initPlayerRange = 1;
         try {
             positionPlayer = world.findPlayer();
             player = new Player(this, positionPlayer);
@@ -87,6 +83,20 @@ public class Game {
             System.err.println("Error loading configuration");
         }
     }
+
+    /**private void loadWorld(String path) {
+        try (InputStream input = new FileInputStream(new File(path, "level1.txt"))) {
+            Properties prop = new Properties();
+            // load the configuration file
+            prop.load(input);
+            initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
+            initPlayerKey = Integer.parseInt(prop.getProperty("key", "0"));
+            initPlayerBomb = Integer.parseInt(prop.getProperty("bomb", "1"));
+            initPlayerRange = Integer.parseInt(prop.getProperty("range", "1"));
+        } catch (IOException ex) {
+            System.err.println("Error loading configuration");
+        }
+    }**/
 
     public boolean monsterAtPos(Position position){
         for(Monster monster: monsterList){

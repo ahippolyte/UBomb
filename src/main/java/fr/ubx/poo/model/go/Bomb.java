@@ -3,6 +3,7 @@ package fr.ubx.poo.model.go;
 import fr.ubx.poo.game.*;
 import fr.ubx.poo.game.Position;
 import fr.ubx.poo.game.Game;
+import fr.ubx.poo.model.decor.Bonus;
 import fr.ubx.poo.model.decor.Decor;
 import fr.ubx.poo.model.go.character.Monster;
 
@@ -90,6 +91,27 @@ public class Bomb extends GameObject {
     public int destroyInDirection(Direction dir){
         Position bombPos = getPosition();
         Position newPos = dir.nextPosition(bombPos);
+        int i=1;
+        while(i<game.getPlayer().getRange() & (game.getWorld().isEmpty(newPos) || game.getWorld().get(newPos) instanceof Bonus)){
+            i++;
+            if (game.getPlayer().getPosition().equals(newPos)) {
+                game.getPlayer().livesNumDec();
+            }
+
+            damageMonsterAtPos(newPos);
+            damageDecorAtPos(newPos);
+            damageBombAtPos(newPos);
+            newPos = dir.nextPosition(newPos);
+        }
+        damageMonsterAtPos(newPos);
+        damageDecorAtPos(newPos);
+        damageBombAtPos(newPos);
+        return i;
+    }
+
+    /**public int destroyInDirection(Direction dir){
+        Position bombPos = getPosition();
+        Position newPos = dir.nextPosition(bombPos);
         damageMonsterAtPos(newPos);
         damageBombAtPos(newPos);
         int i=1;
@@ -107,7 +129,7 @@ public class Bomb extends GameObject {
         damageDecorAtPos(newPos);
         damageBombAtPos(newPos);
         return i;
-    }
+    }**/
 
     public void damageDecorAtPos(Position pos){
         if(!game.getWorld().isEmpty(pos)){
