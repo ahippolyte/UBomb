@@ -44,6 +44,9 @@ public final class GameEngine {
     private Stage stage;
     private Sprite spritePlayer;
     private boolean explosionCreated = false;
+    private boolean color = true;
+    private boolean color2 = false;
+    private boolean color3 = false;
 
     public GameEngine(final String windowTitle, Game game, final Stage stage) {
         this.windowTitle = windowTitle;
@@ -200,11 +203,48 @@ public final class GameEngine {
             showMessage("YOU LOOSE!", Color.RED);
         }
 
-        if(player.isGod()){
+        /**if(player.isGod()){
             spritePlayer.changeColor(true);
         }
         else{
             spritePlayer.changeColor(false);
+        }**/
+
+        if(player.isGod()) {
+            System.out.println(now - player.delay);
+            if (color) {
+                if (color2) {
+                    System.out.println(3);
+                    spritePlayer.changeColor(true);
+                    if (now - player.delay >= 1500000000L) {
+                        color = false;
+                        color2 = true;
+                    }
+                } else {
+                    if (now - player.delay >= 000000000L) {
+                        spritePlayer.changeColor(true);
+                        System.out.println(1);
+                        if (now - player.delay >= 500000000L) {
+                            color = false;
+                            color2 = true;
+                        }
+                    }
+                }
+            } else {
+                if (color3) {
+                    System.out.println(4);
+                    spritePlayer.changeColor(true);
+                } else {
+                    if (now - player.delay >= 500000000L) {
+                        spritePlayer.changeColor(false);
+                        System.out.println(2);
+                        if (now - player.delay >= 1000000000L) {
+                            color = true;
+                            color3 = true;
+                        }
+                    }
+                }
+            }
         }
 
         if (player.isWinner()) {

@@ -84,16 +84,10 @@ public class Game {
         }
     }
 
-    /**private void loadWorld(String path) {
-        try (InputStream input = new FileInputStream(new File(path, "level1.txt"))) {
-            Properties prop = new Properties();
-            // load the configuration file
-            prop.load(input);
-            initPlayerLives = Integer.parseInt(prop.getProperty("lives", "3"));
-            initPlayerKey = Integer.parseInt(prop.getProperty("key", "0"));
-            initPlayerBomb = Integer.parseInt(prop.getProperty("bomb", "1"));
-            initPlayerRange = Integer.parseInt(prop.getProperty("range", "1"));
-        } catch (IOException ex) {
+    /**private void loadWorld(String path, int level) {
+        try (InputStream input = new FileInputStream(new File(path, level))) {
+
+        } catch (IOExceptomion ex) {
             System.err.println("Error loading configuration");
         }
     }**/
