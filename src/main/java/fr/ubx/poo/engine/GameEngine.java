@@ -211,33 +211,29 @@ public final class GameEngine {
         }**/
 
         if(player.isGod()) {
-            System.out.println(now - player.delay);
             if (color) {
                 if (color2) {
-                    System.out.println(3);
                     spritePlayer.changeColor(true);
                     if (now - player.delay >= 1500000000L) {
                         color = false;
-                        color2 = true;
-                    }
-                } else {
-                    if (now - player.delay >= 000000000L) {
-                        spritePlayer.changeColor(true);
-                        System.out.println(1);
-                        if (now - player.delay >= 500000000L) {
-                            color = false;
-                            color2 = true;
-                        }
+                        color3 = true;
                     }
                 }
-            } else {
-                if (color3) {
-                    System.out.println(4);
+                else {
                     spritePlayer.changeColor(true);
-                } else {
+                    if (now - player.delay >= 500000000L) {
+                        color = false;
+                        color2 = true;
+                    }
+                }
+            }
+            else {
+                if (color3) {
+                    spritePlayer.changeColor(false);
+                }
+                else {
                     if (now - player.delay >= 500000000L) {
                         spritePlayer.changeColor(false);
-                        System.out.println(2);
                         if (now - player.delay >= 1000000000L) {
                             color = true;
                             color3 = true;
@@ -246,6 +242,14 @@ public final class GameEngine {
                 }
             }
         }
+        else{
+            color = true;
+            color2 = false;
+            color3 = false;
+
+        }
+
+
 
         if (player.isWinner()) {
             gameLoop.stop();
