@@ -14,10 +14,6 @@ public class SpriteBomb extends SpriteGameObject {
         updateImage();
     }
 
-    public GameObject getGameObject(){
-        return go;
-    }
-
     public String toString(){
         return "SpriteBomb";
     }

@@ -35,7 +35,7 @@ public final class GameEngine {
     private final String windowTitle;
     private final Game game;
     private final Player player;
-    private List<Monster> monsterList = new LinkedList<>();
+    private List<Monster> monsterList;
     public List<Bomb> bombList = new LinkedList<>();
     private final List<Sprite> sprites = new ArrayList<>();
     private StatusBar statusBar;
@@ -50,6 +50,7 @@ public final class GameEngine {
         this.game = game;
         this.player = game.getPlayer();
         this.monsterList = game.getMonsterList();
+        this.bombList = game.getBombList();
 
         initialize(stage, game);
         buildAndSetGameLoop();
@@ -174,17 +175,7 @@ public final class GameEngine {
                 if (bomb.destroyed[1]) {
                     game.getWorld().needDecorRefresh = true;
 
-                    Iterator<Sprite> spriteIterator = sprites.iterator();
-                    while(spriteIterator.hasNext()) {
-                        Sprite s = spriteIterator.next();
-                        if (s instanceof SpriteBomb || s instanceof SpriteExplosion) {
-                            if(s.getGameObject() == bomb) {
-                                s.remove();
-                                spriteIterator.remove();
-                            }
-                        }
-                    }
-
+                    clearSpritesAfterExplosion(bomb);
                     bombIterator.remove();
                 }
             }
@@ -199,17 +190,7 @@ public final class GameEngine {
         while(monsterIterator.hasNext()) {
             Monster monster = monsterIterator.next();
             if(!monster.isAlive()){
-                System.out.println("Monster dead");
-                Iterator<Sprite> spriteIterator = sprites.iterator();
-                while(spriteIterator.hasNext()) {
-                    Sprite sprite = spriteIterator.next();
-                    if (sprite instanceof SpriteMonster) {
-                        if(sprite.getGameObject() == monster) {
-                            sprite.remove();
-                            spriteIterator.remove();
-                        }
-                    }
-                }
+                clearMonsterSprite(monster);
                 monsterIterator.remove();
             }
         }
@@ -220,7 +201,10 @@ public final class GameEngine {
         }
 
         if(player.isGod()){
-            //spritePlayer.changeColor();
+            spritePlayer.changeColor(true);
+        }
+        else{
+            spritePlayer.changeColor(false);
         }
 
         if (player.isWinner()) {
@@ -264,6 +248,41 @@ public final class GameEngine {
                 nextPos = dir.nextPosition(nextPos);
             }
             i++;
+        }
+    }
+
+    public void clearSpritesAfterExplosion(Bomb bomb){
+        Iterator<Sprite> spriteIterator = sprites.iterator();
+        while(spriteIterator.hasNext()) {
+            Sprite sprite = spriteIterator.next();
+            if (sprite instanceof SpriteBomb) {
+                SpriteBomb spriteBomb = (SpriteBomb) sprite;
+                if(spriteBomb.getGameObject() == bomb) {
+                    spriteBomb.remove();
+                    spriteIterator.remove();
+                }
+            }
+            if(sprite instanceof SpriteExplosion){
+                SpriteExplosion spriteExplosion = (SpriteExplosion) sprite;
+                if(spriteExplosion.getGameObject() == bomb) {
+                    spriteExplosion.remove();
+                    spriteIterator.remove();
+                }
+            }
+        }
+    }
+
+    public void clearMonsterSprite(Monster monster){
+        Iterator<Sprite> spriteIterator = sprites.iterator();
+        while(spriteIterator.hasNext()) {
+            Sprite sprite = spriteIterator.next();
+            if (sprite instanceof SpriteMonster) {
+                SpriteMonster spriteMonster = (SpriteMonster) sprite;
+                if(spriteMonster.getGameObject() == monster) {
+                    spriteMonster.remove();
+                    spriteIterator.remove();
+                }
+            }
         }
     }
 

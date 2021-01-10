@@ -17,6 +17,8 @@ public class SpriteMonster extends SpriteGameObject{
         return "SpriteMonster";
     }
 
+
+
     public void updateImage() {
         Monster monster = (Monster) go;
         setImage(ImageFactory.getInstance().getMonster(monster.getDirection()));

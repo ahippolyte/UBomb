@@ -91,6 +91,7 @@ public class Bomb extends GameObject {
         Position bombPos = getPosition();
         Position newPos = dir.nextPosition(bombPos);
         damageMonsterAtPos(newPos);
+        damageBombAtPos(newPos);
         int i=1;
         while(i<game.getPlayer().getRange() && game.getWorld().isEmpty(newPos)){
             i++;
@@ -99,10 +100,12 @@ public class Bomb extends GameObject {
             }
 
             damageMonsterAtPos(newPos);
+            damageBombAtPos(newPos);
             newPos = dir.nextPosition(newPos);
         }
         damageMonsterAtPos(newPos);
         damageDecorAtPos(newPos);
+        damageBombAtPos(newPos);
         return i;
     }
 
@@ -118,6 +121,14 @@ public class Bomb extends GameObject {
             game.getPlayer().livesNumDec();
         }
 
+    }
+
+    public void damageBombAtPos(Position pos){
+        for(Bomb bomb: game.bombList){
+            if(bomb.getPosition().equals(pos)){
+                bomb.creationDate = creationDate;
+            }
+        }
     }
 
     public void damageMonsterAtPos(Position pos){

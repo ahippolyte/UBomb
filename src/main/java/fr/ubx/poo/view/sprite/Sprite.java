@@ -15,9 +15,9 @@ import java.awt.*;
 public abstract class Sprite {
 
     public static final int size = 40;
-    private final Pane layer;
-    private ImageView imageView;
-    private Image image;
+    protected final Pane layer;
+    protected ImageView imageView;
+    protected Image image;
 
     public Sprite(Pane layer, Image image) {
         this.layer = layer;
@@ -34,7 +34,7 @@ public abstract class Sprite {
 
     public abstract Position getPosition();
 
-    public final void render() {
+    public void render() {
         if (imageView != null) {
             remove();
         }
@@ -43,7 +43,6 @@ public abstract class Sprite {
         imageView.setX(getPosition().x * size);
         imageView.setY(getPosition().y * size);
         layer.getChildren().add(imageView);
-
     }
 
     public final void remove() {
@@ -51,7 +50,5 @@ public abstract class Sprite {
         imageView = null;
     }
 
-    public GameObject getGameObject(){
-        return null;
-    }
+    public abstract void changeColor(boolean bool);
 }

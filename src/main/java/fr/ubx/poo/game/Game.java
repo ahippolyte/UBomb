@@ -13,6 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import fr.ubx.poo.model.go.Bomb;
 import fr.ubx.poo.model.go.character.Monster;
 import fr.ubx.poo.model.go.character.Player;
 
@@ -21,6 +22,7 @@ public class Game {
     private final World world; //Pour plusieurs mondes, implémenter un tableau de World
     private final Player player;
     private List<Monster> monsterList = new LinkedList<>();
+    public List<Bomb> bombList = new LinkedList<>();
     private final String worldPath;
     public int initPlayerLives;
     public int initPlayerKey;
@@ -67,6 +69,9 @@ public class Game {
     public List<Monster> getMonsterList(){
         return monsterList;
     }
+    public List<Bomb> getBombList(){
+        return bombList;
+    }
 
     //methods:
     private void loadConfig(String path) {
@@ -86,6 +91,15 @@ public class Game {
     public boolean monsterAtPos(Position position){
         for(Monster monster: monsterList){
             if(monster.getPosition().equals(position)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean bombAtPos(Position position){
+        for(Bomb bomb: bombList){
+            if(bomb.getPosition().equals(position)){
                 return true;
             }
         }

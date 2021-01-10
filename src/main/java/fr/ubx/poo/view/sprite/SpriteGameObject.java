@@ -18,8 +18,11 @@ public abstract class SpriteGameObject extends Sprite {
         return go.getPosition();
     }
 
-
     public GameObject getGameObject(){
         return go;
+    }
+
+    public void changeColor(boolean bool){
+
     }
 }
